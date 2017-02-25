@@ -7,6 +7,7 @@ import {
     CardActions
 } from 'material-ui/Card';
 import Loader from '../../common/loader/loader';
+import styles from './form.css';
 
 const DEFAULT_ERRORS = [];
 
@@ -63,35 +64,37 @@ export default React.createClass({
 
     render() {
         return (
-            <Card>
-                <CardText>
-                    <form onSubmit={evt => this._onSubmit(evt)}>
-                        <div>
-                            <TextField
-                                type="string"
-                                floatingLabelText="username"
-                                value={this.state.username}
-                                disabled={this._isLoading()}
-                            />
-                        </div>
-                        <div>
-                            <TextField
-                                type="password"
-                                floatingLabelText="password"
-                                value={this.state.password}
-                                disabled={this._isLoading()}
-                            />
-                        </div>
-                    </form>
-                </CardText>
-                <CardActions>
-                    <RaisedButton
-                        label={this._btnLabel()}
-                        primary="true"
-                        disabled={this._isLoading()}
-                    />
-                </CardActions>
-            </Card>
+            <div className={styles.container}>
+                <Card>
+                    <CardText>
+                        <form onSubmit={evt => this._onSubmit(evt)}>
+                            <div>
+                                <TextField
+                                    type="string"
+                                    floatingLabelText="username"
+                                    value={this.state.username}
+                                    disabled={this._isLoading()}
+                                />
+                            </div>
+                            <div>
+                                <TextField
+                                    type="password"
+                                    floatingLabelText="password"
+                                    value={this.state.password}
+                                    disabled={this._isLoading()}
+                                />
+                            </div>
+                        </form>
+                    </CardText>
+                    <CardActions>
+                        <RaisedButton
+                            label={this._btnLabel()}
+                            primary="true"
+                            disabled={this._isLoading()}
+                        />
+                    </CardActions>
+                </Card>
+            </div>
         );
     }
 });

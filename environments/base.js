@@ -31,7 +31,7 @@ export default {
             scripts: path.join(SRC_DIR, 'scripts'),
             fonts: [
                 path.join(ROOT_DIR, 'node_modules/font-awesome/fonts/**.*'),
-                path.join(ROOT_DIR, 'node_modules/roboto-fontface/fonts/**.*')
+                path.join(ROOT_DIR, 'node_modules/roboto-fontface/fonts/*/**.*')
             ],
             styles: path.join(SRC_DIR, 'styles'),
             html: SRC_DIR

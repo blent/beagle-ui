@@ -41,11 +41,17 @@ export default function factory($, env) {
             require('postcss-modules')({
                 getJSON: getJSONFromCssModules(env.paths.input.scripts, env.paths.output.scripts),
                 globalModulePaths: [
-                    env.paths.input.styles,
-                    path.join(env.paths.root, 'node_modules')
+                    // env.paths.input.styles,
+                    // path.join(env.paths.root, 'node_modules')
                 ]
             })
         ]))
+        .pipe($.cssUrlAdjuster({
+            replace: [
+                '../../fonts',
+                '../fonts'
+            ],
+        }))
         .pipe($.if(env.build.minify, $.cssnano()))
         .pipe($.concat('bundle.css'))
         .pipe($.gulp.dest(env.paths.output.styles))
