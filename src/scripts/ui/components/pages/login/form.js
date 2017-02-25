@@ -7,7 +7,9 @@ import {
     CardActions
 } from 'material-ui/Card';
 import Loader from '../../common/loader/loader';
-import styles from './form.css';
+import {
+    container as containerStyle
+} from './form.css';
 
 const DEFAULT_ERRORS = [];
 
@@ -38,9 +40,7 @@ export default React.createClass({
         return [err.message];
     },
 
-    _onSubmit(evt) {
-        evt.preventDefault();
-
+    _onSubmit() {
         if (!this._isLoading()) {
             this.props.actions.login(this.state.username, this.state.password);
         }
@@ -64,10 +64,10 @@ export default React.createClass({
 
     render() {
         return (
-            <div className={styles.container}>
+            <div className={containerStyle}>
                 <Card>
                     <CardText>
-                        <form onSubmit={evt => this._onSubmit(evt)}>
+                        <div>
                             <div>
                                 <TextField
                                     type="string"
@@ -84,13 +84,15 @@ export default React.createClass({
                                     disabled={this._isLoading()}
                                 />
                             </div>
-                        </form>
+                        </div>
                     </CardText>
                     <CardActions>
                         <RaisedButton
                             label={this._btnLabel()}
-                            primary="true"
+                            primary
+                            fullWidth
                             disabled={this._isLoading()}
+                            onClick={() => this._onSubmit()}
                         />
                     </CardActions>
                 </Card>

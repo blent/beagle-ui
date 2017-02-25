@@ -28,7 +28,7 @@ class Application extends Alt {
         ], (createLogger, settings) => {
             return Router({
                 logger: createLogger('router'),
-                container: settings.history
+                engine: settings.history
             });
         });
 
@@ -42,7 +42,8 @@ class Application extends Alt {
 
         this.addActions('notifications', [], NotificationsActions);
         this.addStore('notifications', [
-            namespaces.ui.actions('notifications')
+            namespaces.ui.actions('notifications'),
+            namespaces.ui('router')
         ], NotificationsStore);
 
         this.addRouteHandler('login', [

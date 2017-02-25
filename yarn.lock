@@ -1612,7 +1612,7 @@ css-color-names@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/css-color-names/-/css-color-names-0.0.4.tgz#808adc2e79cf84738069b646cb20ec27beb629e0"
 
-css-modules-loader-core@^1.0.1:
+css-modules-loader-core@^1.0.0, css-modules-loader-core@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/css-modules-loader-core/-/css-modules-loader-core-1.0.1.tgz#94e3eec9bc8174df0f974641f3e0d0550497f694"
   dependencies:
@@ -1622,6 +1622,18 @@ css-modules-loader-core@^1.0.1:
     postcss-modules-local-by-default "1.1.1"
     postcss-modules-scope "1.0.2"
     postcss-modules-values "1.2.2"
+
+css-modulesify@^0.27.1:
+  version "0.27.1"
+  resolved "https://registry.yarnpkg.com/css-modulesify/-/css-modulesify-0.27.1.tgz#6429e32aec5dc66af1040243c79d5f35678c0021"
+  dependencies:
+    css-modules-loader-core "^1.0.0"
+    dependency-graph "^0.4.1"
+    object-assign "^3.0.0"
+    promise-polyfill "^2.1.0"
+    resolve "^1.1.7"
+    string-hash "^1.1.0"
+    through2 "^2.0.1"
 
 css-mqpacker@^5.0.1:
   version "5.0.1"
@@ -1822,6 +1834,10 @@ depd@0.4.5:
 depd@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.0.tgz#e1bd82c6aab6ced965b97b88b17ed3e528ca18c3"
+
+dependency-graph@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/dependency-graph/-/dependency-graph-0.4.1.tgz#302e58218d85c51a97638730dbf9b7d852a19693"
 
 deprecated@^0.0.1:
   version "0.0.1"
@@ -5119,6 +5135,10 @@ promise-each@^2.2.0:
   dependencies:
     any-promise "^0.1.0"
 
+promise-polyfill@^2.1.0:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-2.1.4.tgz#7319223532c26ac3e555e7e9bcc0cf76201b51ad"
+
 promise@^7.0.3, promise@^7.1.1:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/promise/-/promise-7.1.1.tgz#489654c692616b8aa55b0724fa809bb7db49c5bf"
@@ -5984,7 +6004,7 @@ strict-uri-encode@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
 
-string-hash@^1.1.1:
+string-hash@^1.1.0, string-hash@^1.1.1:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/string-hash/-/string-hash-1.1.3.tgz#e8aafc0ac1855b4666929ed7dd1275df5d6c811b"
 
