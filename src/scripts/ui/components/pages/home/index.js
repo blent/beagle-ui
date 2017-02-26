@@ -1,9 +1,26 @@
 /* eslint-disable react/prop-types  */
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
-// { children }
-export default function Home() {
+import Menu from './menu';
+import {
+    container as containerCss,
+    body as bodyCss,
+    content as contentCss
+} from './index.css';
+
+export default function Home({ children }) {
     return (
-        <AppBar />
+        <div className={containerCss}>
+            <AppBar
+                title="Beagle"
+            />
+
+            <div className={bodyCss}>
+                <div className={contentCss}>
+                    {children}
+                </div>
+                <Menu />
+            </div>
+        </div>
     );
 }

@@ -1,3 +1,9 @@
 @import resolve("font-awesome/css/font-awesome.css");
 @import resolve("flexboxgrid/dist/flexboxgrid.css");
 @import resolve("roboto-fontface/css/roboto/roboto-fontface.css");
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
