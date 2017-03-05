@@ -4,7 +4,8 @@ import ContainerEngine from 'namespaces-js';
 import { requires } from '../infrastructure/utils/contracts';
 import HttpClient from '../infrastructure/http/client';
 import Logger from '../infrastructure/logging/logger';
-import AuthManager from './auth/manager';
+import AuthService from './auth/service';
+import MonitoringService from './monitoring/service';
 
 const SEPARATOR = '.';
 const NAMESPACES = ContainerEngine.map({
@@ -12,9 +13,7 @@ const NAMESPACES = ContainerEngine.map({
         'http',
         'logging'
     ],
-    domain: [
-        'authentication'
-    ],
+    domain: [],
     ui: [
         'actions',
         'stores',
@@ -49,7 +48,16 @@ const ApplicationConainer = composeClass({
 
         this.register(NAMESPACES.infrastructure.http()).service('client', HttpClient);
 
-        this.register(NAMESPACES.domain()).service('authentication', AuthManager);
+        this.register(NAMESPACES.domain()).service('authentication', AuthService);
+        this.register(NAMESPACES.domain()).service('monitoring', [
+            'settings',
+            NAMESPACES.infrastructure.http('client')
+        ], (settings, httpClient) => {
+            return MonitoringService({
+                url: settings.apiEndpoint,
+                http: httpClient
+            });
+        });
     },
 
     createLogger(source) {

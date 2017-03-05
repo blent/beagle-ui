@@ -7,7 +7,7 @@ const FIELDS = {
     isAuthenticated: Symbol('isAuthenticated')
 };
 
-const AuthManager = composeClass({
+const AuthService = composeClass({
     constructor(params = {}) {
         this[FIELDS.endpoint] = params.endpoint;
         this[FIELDS.isAuthenticated] = false;
@@ -29,5 +29,5 @@ const AuthManager = composeClass({
 });
 
 export default function create(...args) {
-    return new AuthManager(...args);
+    return new AuthService(...args);
 }

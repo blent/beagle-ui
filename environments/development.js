@@ -12,10 +12,7 @@ export default {
         minify: false
     },
     development: {
-        port: 8080,
+        port: 8000,
         watch
-    },
-    test: {
-        singleRun: false
     }
 };

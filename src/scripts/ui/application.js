@@ -8,10 +8,13 @@ import {
 import Router from './router';
 import AuthActions from './actions/authentication';
 import AuthStore from './stores/authentication';
+import LoginRoute from './routes/login';
 import NotificationsActions from './actions/notifications';
 import NotificationsStore from './stores/notifications';
-import LoginRoute from './routes/login';
 import HomeRoute from './routes/home/index';
+import ActivityMonitoringActions from './actions/monitoring/activity';
+import ActivityMonitoringStore from './stores/monitoring/activity';
+import ActivityRoute from './routes/home/monitoring/activity';
 
 const FIELDS = {
     container: Symbol('container')
@@ -32,6 +35,7 @@ class Application extends Alt {
             });
         });
 
+        // auth
         this.addActions('authentication', [
             namespaces.domain('authentication')
         ], AuthActions);
@@ -39,20 +43,32 @@ class Application extends Alt {
             namespaces.ui.actions('authentication'),
             namespaces.ui('router')
         ], AuthStore);
+        this.addRouteHandler('login', [
+            namespaces.domain('authentication')
+        ], LoginRoute);
 
+        // home
+        this.addRouteHandler('home', [
+            namespaces.domain('authentication')
+        ], HomeRoute);
+
+        // notifications
         this.addActions('notifications', [], NotificationsActions);
         this.addStore('notifications', [
             namespaces.ui.actions('notifications'),
             namespaces.ui('router')
         ], NotificationsStore);
 
-        this.addRouteHandler('login', [
-            namespaces.domain('authentication')
-        ], LoginRoute);
-
-        this.addRouteHandler('home', [
-            namespaces.domain('authentication')
-        ], HomeRoute);
+        // activity monitoring
+        this.addActions('monitoring/activity', [
+            namespaces.domain('monitoring')
+        ], ActivityMonitoringActions);
+        this.addStore('monitoring/activity', [
+            namespaces.ui.actions('monitoring/activity'),
+        ], ActivityMonitoringStore);
+        this.addRouteHandler('home/monitoring/activity', [
+            namespaces.ui.actions('monitoring/activity'),
+        ], ActivityRoute);
     }
 
     addActions(name, dependencies = [], constructor) {

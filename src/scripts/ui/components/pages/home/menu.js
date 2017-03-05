@@ -11,11 +11,11 @@ export default function Menu() {
     return (
         <Paper className={containerCss}>
             <List>
-                <Subheader>History</Subheader>
+                <Subheader>Monitoring</Subheader>
                 <ListItem
-                    key="activity"
-                    containerElement={<Link to="/home/activity" />}
-                    primaryText="Activity"
+                    key="monitoring-activity"
+                    containerElement={<Link to="/home/monitoring/activity" />}
+                    primaryText="Active"
                 />
             </List>
             <List>
@@ -29,6 +29,14 @@ export default function Menu() {
                     key="registry-subscriber"
                     containerElement={<Link to="/home/registry/subscriber" />}
                     primaryText="Subscriber"
+                />
+            </List>
+            <List>
+                <Subheader>History</Subheader>
+                <ListItem
+                    key="history-activity"
+                    containerElement={<Link to="/home/history/activity" />}
+                    primaryText="Activity"
                 />
             </List>
         </Paper>

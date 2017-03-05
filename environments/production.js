@@ -7,8 +7,5 @@ export default {
     build: {
         debug: false,
         minify: true
-    },
-    test: {
-        singleRun: true
     }
 };

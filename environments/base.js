@@ -1,8 +1,16 @@
 import path from 'path';
+import set from 'lodash/set';
+import urlJoint from 'url-join';
 
 const ROOT_DIR = path.resolve(__dirname, '..');
 const SRC_DIR = path.join(ROOT_DIR, 'src');
 const DIST_DIR = path.join(ROOT_DIR, 'dist');
+const BEAGLE = {
+    apiEndpoint: '/api',
+    host: 'http://localhost:8080'
+};
+
+set(process, 'env.BEAGLE_API_URL', urlJoint(BEAGLE.host, BEAGLE.apiEndpoint));
 
 export default {
     name: 'base',
@@ -11,13 +19,14 @@ export default {
         minify: true
     },
     development: {
-        port: 8080,
+        port: 8000,
         watch: false
     },
     test: {
         port: 9000,
         report: 'spec'
     },
+    beagle: BEAGLE,
     coverage: {
         report: ['text', 'html', 'json']
     },
@@ -38,10 +47,10 @@ export default {
         },
         output: {
             root: DIST_DIR,
-            scripts: path.join(DIST_DIR, 'scripts'),
-            fonts: path.join(DIST_DIR, 'fonts'),
-            styles: path.join(DIST_DIR, 'styles'),
-            html: DIST_DIR
+            scripts: path.join(DIST_DIR, 'public/scripts'),
+            fonts: path.join(DIST_DIR, 'public/fonts'),
+            styles: path.join(DIST_DIR, 'public/styles'),
+            html: path.join(DIST_DIR, 'public')
         }
     }
 };
