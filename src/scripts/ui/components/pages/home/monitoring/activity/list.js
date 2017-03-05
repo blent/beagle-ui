@@ -1,8 +1,24 @@
 /* eslint-disable react/forbid-prop-types */
 import React from 'react';
-import { List } from 'immutable';
+import {
+    Card,
+    CardTitle
+} from 'material-ui/Card';
+import cn from 'classname';
+import DataTable from '../../../../common/data-table/data-table';
+import {
+    card as cardCss,
+    cardLoading as cardLoadingCss
+} from './list.css';
 
-const DEFAULT_ITEMS = List();
+const DATA_PATH = ['data', 'result'];
+const COLUMNS = [
+    'key',
+    'kind',
+    'proximity',
+    'registered',
+    'time'
+];
 
 export default React.createClass({
     propTypes: {
@@ -10,21 +26,29 @@ export default React.createClass({
         // actions: React.PropTypes.object
     },
 
-    getInitialState() {
-        return {
-            items: DEFAULT_ITEMS
-        };
-    },
-
     _isLoading() {
         return this.props.source.get('isLoading');
     },
 
+    _getItems() {
+        return this.props.source.getIn(DATA_PATH);
+    },
+
     render() {
+        const cardClassNames = cn({
+            [cardCss]: true,
+            [cardLoadingCss]: this._isLoading()
+        });
+
         return (
-            <div>
-                {this.state.items.map(i => i.toJS()).toArray()}
-            </div>
+            <Card className={cardClassNames}>
+                <CardTitle title={'Active peripherals'} />
+                <DataTable
+                    rows={this._getItems()}
+                    columns={COLUMNS}
+                    isLoading={this._isLoading()}
+                />
+            </Card>
         );
     }
 });

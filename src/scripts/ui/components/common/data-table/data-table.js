@@ -1,7 +1,18 @@
 import React from 'react';
-import Griddle from 'griddle-react';
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+    TableRowColumn
+} from 'material-ui/Table';
+import isObject from 'lodash/isObject';
+import forEach from 'lodash/forEach';
+import map from 'lodash/map';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import DynamicEventsMixin from '../../mixins/dynamic-events-mixin';
+import Loader from '../loader/loader';
 
 export default React.createClass({
     propTypes: {
@@ -9,17 +20,9 @@ export default React.createClass({
         tableClassName: React.PropTypes.string,
         columns: React.PropTypes.array,
         columnMetadata: React.PropTypes.array,
-        rowMetadata: React.PropTypes.object,
-        rows: React.PropTypes.array,
+        rows: React.PropTypes.object,
         noDataMessage: React.PropTypes.string,
-        noDataClassName: React.PropTypes.string,
-        resultsPerPage: React.PropTypes.number,
-        customNoDataComponent: React.PropTypes.element,
-        showFilter: React.PropTypes.bool,
-        useCustomRowComponent: React.PropTypes.bool,
-        customRowComponent: React.PropTypes.element,
-        customRowComponentClassName: React.PropTypes.string,
-        onRowClick: React.PropTypes.func
+        isLoading: React.PropTypes.bool
     },
 
     mixins: [
@@ -27,25 +30,108 @@ export default React.createClass({
         DynamicEventsMixin
     ],
 
+    getDefaultProps() {
+        return {
+            noDataMessage: 'No data'
+        };
+    },
+
+    componentWillMount() {
+        this._buildColumns(this.props.columns, this.props.columnMetadata);
+    },
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.columnMetadata !== nextProps.columnMetadata) {
+            this._buildColumns(nextProps.columns, nextProps.columnMetadata);
+        } else if (this.props.columns !== nextProps.columns) {
+            this._buildColumns(nextProps.columns, nextProps.columnMetadata);
+        }
+    },
+
+    _columns: null,
+
+    _buildColumns(columns, metadata) {
+        this._columns = {};
+
+        forEach(columns, (name) => {
+            this._columns[name] = name;
+        });
+
+        forEach(metadata, (meta) => {
+            if (this._columns[meta.columnName]) {
+                this._columns = meta;
+            }
+        });
+    },
+
+    _renderColumns() {
+        return map(this._columns, (metadata) => {
+            if (isObject(metadata)) {
+                return (
+                    <TableHeaderColumn
+                        tooltip={metadata}
+                    >
+                        {metadata.displayName || metadata.columnName}
+                    </TableHeaderColumn>
+                );
+            }
+
+            return (
+                <TableHeaderColumn
+                    tooltip={metadata}
+                >
+                    {metadata}
+                </TableHeaderColumn>
+            );
+        });
+    },
+
+    _renderRow(row) {
+        return map(this._columns, (meta, idx) => {
+            const path = isObject(meta) ? meta.columnName : meta;
+            const key = `${idx}_col`;
+            return (
+                <TableRowColumn key={key}>
+                    {row.get(path)}
+                </TableRowColumn>
+            );
+        });
+    },
+
+    _renderRows() {
+        if (this.props.isLoading) {
+            return <Loader />;
+        }
+
+        if (!this.props.rows || this.props.rows.size === 0) {
+            return this.props.noDataMessage;
+        }
+
+        return this.props.rows.map((row, idx) => {
+            const key = `${idx}_row`;
+
+            return (
+                <TableRow key={key}>
+                    {this._renderRow(row)}
+                </TableRow>
+            );
+        });
+    },
+
     render() {
         return (
-            <Griddle
-                columns={this.props.columns}
-                columnMetadata={this.props.columnMetadata}
-                results={this.props.rows}
-                rowMetadata={this.props.rowMetadata}
-                noDataMessage={this.props.noDataMessage}
-                noDataClassName={this.props.noDataClassName}
-                resultsPerPage={this.props.resultsPerPage}
-                customNoDataComponent={this.props.customNoDataComponent}
-                gridClassName={this.props.className}
-                tableClassName={this.props.tableClassName}
-                showFilter={this.props.showFilter}
-                useCustomRowComponent={this.props.useCustomRowComponent}
-                customRowComponent={this.props.customRowComponent}
-                customRowComponentClassName={this.props.customRowComponentClassName}
-                onRowClick={this.props.onRowClick}
-            />
+            <div className={this.props.className}>
+                <Table calssName={this.props.tableClassName}>
+                    <TableHeader>
+                        <TableRow>
+                            {this._renderColumns()}
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {this._renderRows()}
+                    </TableBody>
+                </Table>
+            </div>
         );
     }
 });

@@ -4,6 +4,8 @@ import { Router, Route, IndexRedirect, Redirect } from 'react-router';
 import Root from './pages/root';
 import Login from './pages/login/index';
 import Home from './pages/home/index';
+import Monitoring from './pages/home/monitoring/index';
+import ActivityMonitoring from './pages/home/monitoring/activity/index';
 
 const noop = () => <span>Not implemented</span>;
 
@@ -45,11 +47,11 @@ export default React.createClass({
                     >
                         <Route
                             path="monitoring"
-                            component={noop}
+                            component={Monitoring}
                         >
                             <Route
                                 path="activity"
-                                component={noop}
+                                component={ActivityMonitoring}
                                 onEnter={this.props.flux.getRouteHandler('home/monitoring/activity')}
                             />
                         </Route>

@@ -12,8 +12,8 @@ export default React.createClass({
     render() {
         return (
             <AltContainer
-                stores={{ source: this.getStore('activityMonitoring') }}
-                actions={{ actions: this.getActions('activityMonitoring') }}
+                stores={{ source: this.getStore('monitoring/activity') }}
+                actions={{ actions: this.getActions('monitoring/activity') }}
             >
                 <List />
             </AltContainer>

@@ -11,8 +11,8 @@ export default composeClass({
 
     find(query) {
         this.service.getActivity(query)
-            .then(result => this.actions.findComplete(result))
-            .catch(reason => this.actions.findFail(reason));
+            .then(result => this.findComplete(result))
+            .catch(reason => this.findFail(reason));
 
         return null;
     },
