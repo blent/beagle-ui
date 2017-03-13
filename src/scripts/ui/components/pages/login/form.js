@@ -1,4 +1,5 @@
 import React from 'react';
+import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {
@@ -10,8 +11,6 @@ import Loader from '../../common/loader/loader';
 import {
     container as containerStyle
 } from './form.css';
-
-const DEFAULT_ERRORS = [];
 
 export default React.createClass({
     propTypes: {
@@ -34,7 +33,7 @@ export default React.createClass({
         const err = this.props.source.get('error');
 
         if (!err) {
-            return DEFAULT_ERRORS;
+            return null;
         }
 
         return [err.message];
@@ -65,37 +64,41 @@ export default React.createClass({
     render() {
         return (
             <div className={containerStyle}>
-                <Card>
-                    <CardText>
-                        <div>
+                <Paper zDepth={5}>
+                    <Card>
+                        <CardText>
                             <div>
-                                <TextField
-                                    type="string"
-                                    floatingLabelText="username"
-                                    value={this.state.username}
-                                    disabled={this._isLoading()}
-                                />
+                                <div>
+                                    <TextField
+                                        type="string"
+                                        floatingLabelText="username"
+                                        value={this.state.username}
+                                        disabled={this._isLoading()}
+                                    />
+                                </div>
+                                <div>
+                                    <TextField
+                                        type="password"
+                                        floatingLabelText="password"
+                                        value={this.state.password}
+                                        disabled={this._isLoading()}
+                                        errorText={this._getErrors()}
+                                    />
+                                </div>
                             </div>
-                            <div>
-                                <TextField
-                                    type="password"
-                                    floatingLabelText="password"
-                                    value={this.state.password}
-                                    disabled={this._isLoading()}
-                                />
-                            </div>
-                        </div>
-                    </CardText>
-                    <CardActions>
-                        <RaisedButton
-                            label={this._btnLabel()}
-                            primary
-                            fullWidth
-                            disabled={this._isLoading()}
-                            onClick={() => this._onSubmit()}
-                        />
-                    </CardActions>
-                </Card>
+                        </CardText>
+                        <CardActions>
+                            <RaisedButton
+                                className="primary"
+                                label={this._btnLabel()}
+                                primary
+                                fullWidth
+                                disabled={this._isLoading()}
+                                onClick={() => this._onSubmit()}
+                            />
+                        </CardActions>
+                    </Card>
+                </Paper>
             </div>
         );
     }

@@ -4,14 +4,15 @@ import {
     Card,
     CardTitle
 } from 'material-ui/Card';
-import cn from 'classname';
+import cn from 'classnames';
 import DataTable from '../../../../common/data-table/data-table';
 import {
     card as cardCss,
     cardLoading as cardLoadingCss
 } from './list.css';
 
-const DATA_PATH = ['data', 'result'];
+const DATA_PATH = ['data', 'result', 'items'];
+const QUANTITY_PATH = ['data', 'result', 'quantity'];
 const COLUMNS = [
     'key',
     'kind',
@@ -34,6 +35,10 @@ export default React.createClass({
         return this.props.source.getIn(DATA_PATH);
     },
 
+    _getQuantity() {
+        return this.props.source.getIn(QUANTITY_PATH);
+    },
+
     render() {
         const cardClassNames = cn({
             [cardCss]: true,
@@ -45,6 +50,7 @@ export default React.createClass({
                 <CardTitle title={'Active peripherals'} />
                 <DataTable
                     rows={this._getItems()}
+                    total={this._getQuantity()}
                     columns={COLUMNS}
                     isLoading={this._isLoading()}
                 />

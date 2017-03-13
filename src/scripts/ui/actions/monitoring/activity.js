@@ -7,6 +7,11 @@ export default composeClass({
         requires('monitoring service', service);
 
         this.service = service;
+
+        this.generateActions(
+            'findComplete',
+            'findFail'
+        );
     },
 
     find(query) {
@@ -15,13 +20,5 @@ export default composeClass({
             .catch(reason => this.findFail(reason));
 
         return null;
-    },
-
-    findComplete(entries) {
-        return entries;
-    },
-
-    findFail(reason) {
-        return reason;
     }
 });

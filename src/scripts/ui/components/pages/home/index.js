@@ -5,7 +5,8 @@ import Menu from './menu';
 import {
     container as containerCss,
     body as bodyCss,
-    content as contentCss
+    content as contentCss,
+    bar as barCss
 } from './index.css';
 
 export default function Home({ children }) {
@@ -13,6 +14,7 @@ export default function Home({ children }) {
         <div className={containerCss}>
             <AppBar
                 title="Beagle"
+                className={barCss}
             />
 
             <div className={bodyCss}>

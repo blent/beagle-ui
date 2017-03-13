@@ -1,7 +1,14 @@
+@import resolve("_vars.css");
+
 .container {
      display: flex;
      flex-direction: column;
      min-height: 100vh;
+}
+
+.bar {
+  background: linear-gradient(to right, $color_brand_primary_dark, $color_brand_primary_light 100%);
+  background-size: cover;
 }
 
 .body {

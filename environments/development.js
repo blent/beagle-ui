@@ -3,7 +3,7 @@ import minimist from 'minimist';
 const argv = minimist(process.argv.slice(2));
 const tasks = argv._;
 const task = tasks[0];
-const watch = !task || task.indexOf('build') === -1;
+const watch = !task || task.indexOf('build') === -1 || argv.watch === true;
 
 export default {
     name: 'development',

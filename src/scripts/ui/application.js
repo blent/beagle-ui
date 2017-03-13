@@ -44,12 +44,12 @@ class Application extends Alt {
             namespaces.ui('router')
         ], AuthStore);
         this.addRouteHandler('login', [
-            namespaces.domain('authentication')
+            namespaces.ui.stores('authentication')
         ], LoginRoute);
 
         // home
         this.addRouteHandler('home', [
-            namespaces.domain('authentication')
+            namespaces.ui.stores('authentication')
         ], HomeRoute);
 
         // notifications
@@ -68,7 +68,12 @@ class Application extends Alt {
         ], ActivityMonitoringStore);
         this.addRouteHandler('home/monitoring/activity', [
             namespaces.ui.actions('monitoring/activity'),
-        ], ActivityRoute);
+        ], (actions) => {
+            return ActivityRoute(actions, {
+                take: 10,
+                skip: 0
+            });
+        });
     }
 
     addActions(name, dependencies = [], constructor) {
