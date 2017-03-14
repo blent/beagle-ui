@@ -19,7 +19,7 @@ const AuthService = composeClass({
 
     login() {
         this[FIELDS.isAuthenticated] = true;
-        return Promise.fromCallback(done => setTimeout(done, 2000));
+        return Promise.fromCallback(done => setTimeout(done, 1000));
     },
 
     logout() {

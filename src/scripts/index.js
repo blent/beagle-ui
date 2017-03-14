@@ -16,7 +16,9 @@ document.body.appendChild(container);
 const history = browserHistory;
 const app = App({
     debug: get(process, 'env.NODE_ENV', 'development') === 'development',
-    apiEndpoint: get(process, 'env.BEAGLE_API_URL', 'http://localhost:8080/api'),
+    http: {
+        api: get(process, 'env.BEAGLE_API_URL', 'http://localhost:8080/api')
+    },
     logger: console,
     history
 });

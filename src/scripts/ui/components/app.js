@@ -6,6 +6,7 @@ import Login from './pages/login/index';
 import Home from './pages/home/index';
 import Monitoring from './pages/home/monitoring/index';
 import ActivityMonitoring from './pages/home/monitoring/activity/index';
+import PeripheralsRegistry from './pages/home/registry/peripherals/index';
 
 const noop = () => <span>Not implemented</span>;
 
@@ -57,15 +58,15 @@ export default React.createClass({
                         </Route>
                         <Route
                             path="registry"
-                            component={noop}
                         >
-                            <IndexRedirect to="/registry/target" />
+                            <IndexRedirect to="/registry/peripherals" />
                             <Route
-                                path="target"
-                                component={noop}
+                                path="peripherals"
+                                component={PeripheralsRegistry}
+                                onEnter={this.props.flux.getRouteHandler('home/registry/peripherals')}
                             />
                             <Route
-                                path="endpoint"
+                                path="endpoints"
                                 component={noop}
                             />
                         </Route>

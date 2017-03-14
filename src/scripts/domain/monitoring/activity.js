@@ -1,28 +1,23 @@
 import composeClass from 'compose-class';
 import Symbol from 'es6-symbol';
 import get from 'lodash/get';
-import urlJoint from 'url-join';
 import { requires } from '../../infrastructure/utils/contracts';
 
 const FIELDS = {
-    url: Symbol('url'),
     http: Symbol('http')
 };
 
-const ActivityService = composeClass({
-    constructor(params = {}) {
-        requires('params', params);
-        requires('params.url', params.url);
-        requires('params.http', params.http);
+const ActivityMonitoringService = composeClass({
+    constructor(http) {
+        requires('http', http);
 
-        this[FIELDS.url] = params.url;
-        this[FIELDS.http] = params.http;
+        this[FIELDS.http] = http;
     },
 
-    getActivity(query) {
+    find(query) {
         return this[FIELDS.http].execute({
             method: 'GET',
-            url: urlJoint(this[FIELDS.url], 'monitoring/activity'),
+            url: 'monitoring/activity',
             params: {
                 take: get(query, 'take', 10),
                 skip: get(query, 'skip', 0)
@@ -32,5 +27,5 @@ const ActivityService = composeClass({
 });
 
 export default function create(...args) {
-    return new ActivityService(...args);
+    return new ActivityMonitoringService(...args);
 }

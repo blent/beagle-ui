@@ -1,13 +1,16 @@
 import { Record } from 'immutable';
 
-const PeripheralModel = Record({
-    key: '',
-    kind: '',
-    proximity: '',
-    registered: false,
-    time: null
+const IBeaconPeripheralModel = Record({
+    id: 0,
+    kind: null,
+    name: null,
+    uuid: null,
+    major: null,
+    minor: null,
+    enabled: false,
+    subscribers: null
 });
 
 export default function create(values) {
-    return new PeripheralModel(values);
+    return new IBeaconPeripheralModel(values);
 }

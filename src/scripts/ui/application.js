@@ -15,6 +15,9 @@ import HomeRoute from './routes/home/index';
 import ActivityMonitoringActions from './actions/monitoring/activity';
 import ActivityMonitoringStore from './stores/monitoring/activity';
 import ActivityRoute from './routes/home/monitoring/activity';
+import PeripheralsRegistryActions from './actions/registry/peripherals';
+import PeripheralsRegistryStore from './stores/registry/peripherals';
+import PeripheralsRegistryRoute from './routes/home/registry/peripherals';
 
 const FIELDS = {
     container: Symbol('container')
@@ -31,11 +34,11 @@ class Application extends Alt {
         ], (createLogger, settings) => {
             return Router({
                 logger: createLogger('router'),
-                engine: settings.history
+                engine: settings.get('history').toJS()
             });
         });
 
-        // auth
+        // Authentication
         this.addActions('authentication', [
             namespaces.domain('authentication')
         ], AuthActions);
@@ -47,21 +50,21 @@ class Application extends Alt {
             namespaces.ui.stores('authentication')
         ], LoginRoute);
 
-        // home
+        // Home
         this.addRouteHandler('home', [
             namespaces.ui.stores('authentication')
         ], HomeRoute);
 
-        // notifications
+        // Notifications
         this.addActions('notifications', [], NotificationsActions);
         this.addStore('notifications', [
             namespaces.ui.actions('notifications'),
             namespaces.ui('router')
         ], NotificationsStore);
 
-        // activity monitoring
+        // Activity Monitoring
         this.addActions('monitoring/activity', [
-            namespaces.domain('monitoring')
+            namespaces.domain.monitoring('activity')
         ], ActivityMonitoringActions);
         this.addStore('monitoring/activity', [
             namespaces.ui.actions('monitoring/activity'),
@@ -70,6 +73,22 @@ class Application extends Alt {
             namespaces.ui.actions('monitoring/activity'),
         ], (actions) => {
             return ActivityRoute(actions, {
+                take: 10,
+                skip: 0
+            });
+        });
+
+        // Targets Registry
+        this.addActions('registry/peripherals', [
+            namespaces.domain.registry('peripherals')
+        ], PeripheralsRegistryActions);
+        this.addStore('registry/peripherals', [
+            namespaces.ui.actions('registry/peripherals'),
+        ], PeripheralsRegistryStore);
+        this.addRouteHandler('home/registry/peripherals', [
+            namespaces.ui.actions('registry/peripherals'),
+        ], (actions) => {
+            return PeripheralsRegistryRoute(actions, {
                 take: 10,
                 skip: 0
             });

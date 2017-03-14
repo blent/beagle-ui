@@ -4,7 +4,7 @@ import { requires } from '../../../infrastructure/utils/contracts';
 
 export default composeClass({
     constructor(service) {
-        requires('monitoring service', service);
+        requires('targets service', service);
 
         this.service = service;
 

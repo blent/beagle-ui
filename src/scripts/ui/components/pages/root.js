@@ -2,8 +2,11 @@
 import React from 'react';
 import AltContainer from 'alt-container';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import InjectTapEvents from 'react-tap-event-plugin';
 import FluxContextMixin from '../mixins/flux-context-mixin';
 import Notifications from './notifications';
+
+InjectTapEvents();
 
 export default React.createClass({
     propTypes: {

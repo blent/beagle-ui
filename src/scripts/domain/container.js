@@ -1,11 +1,13 @@
 import composeClass from 'compose-class';
 import Symbol from 'es6-symbol';
 import ContainerEngine from 'namespaces-js';
+import Immutable from 'immutable';
 import { requires } from '../infrastructure/utils/contracts';
 import HttpClient from '../infrastructure/http/client';
 import Logger from '../infrastructure/logging/logger';
 import AuthService from './auth/service';
-import MonitoringService from './monitoring/service';
+import ActivityMonitoringService from './monitoring/activity';
+import PeripheralsRegistryService from './registry/peripherals';
 
 const SEPARATOR = '.';
 const NAMESPACES = ContainerEngine.map({
@@ -13,7 +15,10 @@ const NAMESPACES = ContainerEngine.map({
         'http',
         'logging'
     ],
-    domain: [],
+    domain: [
+        'monitoring',
+        'registry'
+    ],
     ui: [
         'actions',
         'stores',
@@ -38,25 +43,36 @@ const ApplicationConainer = composeClass({
     constructor(params = {}) {
         this[FIELDS.container] = new ContainerEngine({ separator: SEPARATOR });
 
-        this[FIELDS.container].value('settings', params);
+        this[FIELDS.container].value('settings', Immutable.fromJS(params));
         this[FIELDS.container].const('log', params.logger || console);
         this[FIELDS.container].factory('logger', ['log', 'settings'], (log, settings) => {
             return (prefix) => {
-                return Logger(log, { prefix: `[${prefix}]`, debug: settings.debug });
+                return Logger(log, { prefix: `[${prefix}]`, debug: settings.get('debug') });
             };
         });
 
-        this.register(NAMESPACES.infrastructure.http()).service('client', HttpClient);
+        // HTTP Client
+        this.register(NAMESPACES.infrastructure.http()).service('client', [
+            'settings'
+        ], (settings) => {
+            return HttpClient(settings.get(['http', 'api']));
+        });
 
+        // Authentication Service
         this.register(NAMESPACES.domain()).service('authentication', AuthService);
-        this.register(NAMESPACES.domain()).service('monitoring', [
-            'settings',
+
+        // Activity Monitoring Service
+        this.register(NAMESPACES.domain.monitoring()).service('activity', [
             NAMESPACES.infrastructure.http('client')
-        ], (settings, httpClient) => {
-            return MonitoringService({
-                url: settings.apiEndpoint,
-                http: httpClient
-            });
+        ], (httpClient) => {
+            return ActivityMonitoringService(httpClient);
+        });
+
+        // Targets Registry Service
+        this.register(NAMESPACES.domain.registry()).service('peripherals', [
+            NAMESPACES.infrastructure.http('client')
+        ], (httpClient) => {
+            return PeripheralsRegistryService(httpClient);
         });
     },
 

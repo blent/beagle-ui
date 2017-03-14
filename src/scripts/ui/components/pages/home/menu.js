@@ -21,14 +21,14 @@ export default function Menu() {
             <List>
                 <Subheader>Registry</Subheader>
                 <ListItem
-                    key="registry-target"
-                    containerElement={<Link to="/home/registry/target" />}
-                    primaryText="Target"
+                    key="registry-peripherals"
+                    containerElement={<Link to="/home/registry/peripherals" />}
+                    primaryText="Peripherals"
                 />
                 <ListItem
-                    key="registry-subscriber"
-                    containerElement={<Link to="/home/registry/subscriber" />}
-                    primaryText="Subscriber"
+                    key="registry-endpoints"
+                    containerElement={<Link to="/home/registry/endpoints" />}
+                    primaryText="Endpoints"
                 />
             </List>
             <List>
@@ -37,6 +37,11 @@ export default function Menu() {
                     key="history-activity"
                     containerElement={<Link to="/home/history/activity" />}
                     primaryText="Activity"
+                />
+                <ListItem
+                    key="history-delivery"
+                    containerElement={<Link to="/home/history/delivery" />}
+                    primaryText="Delivery"
                 />
             </List>
         </Paper>
