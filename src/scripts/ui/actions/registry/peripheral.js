@@ -9,16 +9,16 @@ export default composeClass({
         this.service = service;
 
         this.generateActions(
-            'create',
-            'findComplete',
-            'findFail'
+            'getComplete',
+            'getFail',
+            'cancel'
         );
     },
 
-    find(query) {
-        this.service.find(query)
-            .then(result => this.findComplete(result))
-            .catch(reason => this.findFail(reason));
+    get(id) {
+        this.service.get(id)
+            .then(result => this.getComplete(result))
+            .catch(reason => this.getFail(reason));
 
         return null;
     }

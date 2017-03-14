@@ -123,10 +123,6 @@ export default React.createClass({
     },
 
     _renderRows() {
-        if (this.props.isLoading) {
-            return <Loader />;
-        }
-
         if (!this._hasRows()) {
             return null;
         }
@@ -159,9 +155,18 @@ export default React.createClass({
         );
     },
 
+    _renderLoader() {
+        if (this.props.isLoading) {
+            return <Loader />;
+        }
+
+        return null;
+    },
+
     render() {
         return (
             <div className={this.props.className}>
+                {this._renderLoader()}
                 <Table
                     className={this.props.tableClassName}
                     selectable={this.props.selectable}

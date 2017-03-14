@@ -7,3 +7,12 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.card {
+    margin: 2em;
+    opacity: 1;
+}
+
+.card-loading {
+    opacity: 0.8;
+}

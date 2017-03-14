@@ -16,35 +16,35 @@ import MenuItem from 'material-ui/MenuItem';
 import cn from 'classnames';
 import DataTable from '../../../../common/data-table/data-table';
 import {
-    card as cardCss,
-    cardLoading as cardLoadingCss,
     menuIcon as menuIconCss
 } from './list.css';
 
 const DATA_PATH = ['data', 'result', 'items'];
 const QUANTITY_PATH = ['data', 'result', 'quantity'];
 const COLUMNS = [
-    'key',
     'kind',
-    'proximity',
-    'registered',
-    'time'
+    'name',
+    'enabled'
 ];
 
-const CSS_ICON_ADD = cn('fa', 'fa-plus', menuIconCss);
+const CSS_ICON_CREATE = cn('fa', 'fa-plus', menuIconCss);
 const CSS_ICON_REMOVE = cn('fa', 'fa-minus', menuIconCss);
 const ORIGIN_ANCHOR = { horizontal: 'left', vertical: 'top' };
 
 export default React.createClass({
     propTypes: {
         source: React.PropTypes.object,
-        // actions: React.PropTypes.object
+        actions: React.PropTypes.object
     },
 
     getInitialState() {
         return {
             value: 1
         };
+    },
+
+    _onCreateClick() {
+        this.props.actions.create();
     },
 
     _isLoading() {
@@ -61,10 +61,9 @@ export default React.createClass({
 
     render() {
         const cardClassNames = cn({
-            [cardCss]: true,
-            [cardLoadingCss]: this._isLoading()
+            card: true,
+            'card-loading': this._isLoading()
         });
-
 
         return (
             <Card className={cardClassNames}>
@@ -79,8 +78,9 @@ export default React.createClass({
                             targetOrigin={ORIGIN_ANCHOR}
                         >
                             <MenuItem
-                                leftIcon={<FontIcon className={CSS_ICON_ADD} />}
+                                leftIcon={<FontIcon className={CSS_ICON_CREATE} />}
                                 primaryText="Create"
+                                onClick={this._onCreateClick}
                             />
                             <MenuItem
                                 leftIcon={<FontIcon className={CSS_ICON_REMOVE} />}

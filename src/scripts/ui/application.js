@@ -18,6 +18,9 @@ import ActivityRoute from './routes/home/monitoring/activity';
 import PeripheralsRegistryActions from './actions/registry/peripherals';
 import PeripheralsRegistryStore from './stores/registry/peripherals';
 import PeripheralsRegistryRoute from './routes/home/registry/peripherals';
+import EditPeripheralActions from './actions/registry/peripheral';
+import EditPeripheralStore from './stores/registry/peripheral';
+import EditPeripheralRoute from './routes/home/registry/peripheral';
 
 const FIELDS = {
     container: Symbol('container')
@@ -67,7 +70,7 @@ class Application extends Alt {
             namespaces.domain.monitoring('activity')
         ], ActivityMonitoringActions);
         this.addStore('monitoring/activity', [
-            namespaces.ui.actions('monitoring/activity'),
+            namespaces.ui.actions('monitoring/activity')
         ], ActivityMonitoringStore);
         this.addRouteHandler('home/monitoring/activity', [
             namespaces.ui.actions('monitoring/activity'),
@@ -78,12 +81,13 @@ class Application extends Alt {
             });
         });
 
-        // Targets Registry
+        // Peripherals Registry
         this.addActions('registry/peripherals', [
             namespaces.domain.registry('peripherals')
         ], PeripheralsRegistryActions);
         this.addStore('registry/peripherals', [
             namespaces.ui.actions('registry/peripherals'),
+            namespaces.ui('router')
         ], PeripheralsRegistryStore);
         this.addRouteHandler('home/registry/peripherals', [
             namespaces.ui.actions('registry/peripherals'),
@@ -92,6 +96,20 @@ class Application extends Alt {
                 take: 10,
                 skip: 0
             });
+        });
+
+        // Peripheral Edit Form
+        this.addActions('registry/peripheral', [
+            namespaces.domain.registry('peripherals')
+        ], EditPeripheralActions);
+        this.addStore('registry/peripheral', [
+            namespaces.ui.actions('registry/peripheral'),
+            namespaces.ui('router')
+        ], EditPeripheralStore);
+        this.addRouteHandler('home/registry/peripheral', [
+            namespaces.ui.actions('registry/peripheral'),
+        ], (actions) => {
+            return EditPeripheralRoute(actions);
         });
     }
 

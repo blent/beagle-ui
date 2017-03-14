@@ -6,10 +6,6 @@ import {
 } from 'material-ui/Card';
 import cn from 'classnames';
 import DataTable from '../../../../common/data-table/data-table';
-import {
-    card as cardCss,
-    cardLoading as cardLoadingCss
-} from './list.css';
 
 const DATA_PATH = ['data', 'result', 'items'];
 const QUANTITY_PATH = ['data', 'result', 'quantity'];
@@ -41,8 +37,8 @@ export default React.createClass({
 
     render() {
         const cardClassNames = cn({
-            [cardCss]: true,
-            [cardLoadingCss]: this._isLoading()
+            card: true,
+            'card-loading': this._isLoading()
         });
 
         return (

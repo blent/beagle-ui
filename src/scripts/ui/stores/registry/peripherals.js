@@ -7,17 +7,25 @@ import Peripheral from '../../models/peripheral';
 import { requires } from '../../../infrastructure/utils/contracts';
 
 export default composeClass({
-    constructor(actions) {
+    constructor(actions, router) {
         requires('actions', actions);
+        requires('router', router);
 
         this.bindActions(actions);
 
+        this.router = router;
         this.state = DataSource({
+            loading: false,
+            error: null,
             data: QueryResult()
         });
     },
 
-    find(query) {
+    onCreate() {
+        this.router.redirect('/home/registry/peripheral');
+    },
+
+    onFind(query) {
         this.setState(this.state.withMutations((state) => {
             return state
                 .set('isLoading', true)

@@ -1,6 +1,6 @@
-export default function create(activity, defaultQuery) {
+export default function create(actions, defaultQuery) {
     return (nextState, replace, done) => {
-        activity.find(defaultQuery);
+        actions.find(defaultQuery);
         done();
     };
 }

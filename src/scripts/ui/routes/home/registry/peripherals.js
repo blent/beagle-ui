@@ -1,6 +1,6 @@
-export default function create(peripherals, defaultQuery) {
+export default function create(actions, defaultQuery) {
     return (nextState, replace, done) => {
-        peripherals.find(defaultQuery);
+        actions.find(defaultQuery);
         done();
     };
 }
