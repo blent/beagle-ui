@@ -9,6 +9,7 @@ import ActivityMonitoring from './pages/home/monitoring/activity/index';
 import PeripheralsRegistry from './pages/home/registry/peripherals/index';
 import EndpointsRegistry from './pages/home/registry/endpoints/index';
 import EditPeripheral from './pages/home/registry/peripheral/index';
+import EditEndpoint from './pages/home/registry/endpoint/index';
 
 const noop = () => <span>Not implemented</span>;
 
@@ -76,6 +77,11 @@ export default React.createClass({
                                 path="endpoints"
                                 component={EndpointsRegistry}
                                 onEnter={this.props.flux.getRouteHandler('home/registry/endpoints')}
+                            />
+                            <Route
+                                path="endpoint(/:id)"
+                                component={EditEndpoint}
+                                onEnter={this.props.flux.getRouteHandler('home/registry/endpoint')}
                             />
                         </Route>
                         <Route

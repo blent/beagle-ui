@@ -108,7 +108,7 @@ class Application extends Alt {
             namespaces.domain.registry('endpoints')
         ], GenericListActions);
         this.addStore('registry/endpoints', [
-            namespaces.ui.actions('registry/peripherals'),
+            namespaces.ui.actions('registry/endpoints'),
             namespaces.ui('router'),
             constant('/home/registry/endpoint')
         ], GenericListStore);
@@ -116,6 +116,19 @@ class Application extends Alt {
             namespaces.ui.actions('registry/endpoints'),
             constant({ take: 10, skip: 0 })
         ], GenericListRoute);
+
+        // Endpoint Edit Form
+        this.addActions('registry/endpoint', [
+            namespaces.domain.registry('endpoints')
+        ], GenericItemActions);
+        this.addStore('registry/endpoint', [
+            namespaces.ui.actions('registry/endpoint'),
+            namespaces.ui('router'),
+            constant('/home/registry/endpoints')
+        ], GenericItemStore);
+        this.addRouteHandler('home/registry/endpoint', [
+            namespaces.ui.actions('registry/endpoint'),
+        ], GenericItemRoute);
     }
 
     addActions(name, dependencies = [], constructor) {

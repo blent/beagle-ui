@@ -14,7 +14,7 @@ export default composeClass({
         this.bindActions(actions);
 
         this.router = router;
-        this.editUrl = editRoute;
+        this.editRoute = editRoute;
         this.state = DataSource({
             loading: false,
             error: null,

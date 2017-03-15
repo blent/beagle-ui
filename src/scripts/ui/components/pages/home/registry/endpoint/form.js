@@ -2,12 +2,11 @@
 import React from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import {
-    FormsyCheckbox,
     FormsySelect,
     FormsyText
 } from 'formsy-material-ui/lib';
 import DataSourceMixin from '../../../../mixins/data-source-mixin';
-import kinds from '../../../../../../domain/registry/peripherals/kinds';
+import httpMethods from '../../../../../../domain/registry/endpoints/methods';
 import Form from '../../../../common/form/form';
 
 export default React.createClass({
@@ -20,22 +19,22 @@ export default React.createClass({
         DataSourceMixin
     ],
 
-    _renderKindDropdown() {
+    _renderHttpMethodsDropdown() {
         return (
             <FormsySelect
-                name="kind"
-                floatingLabelText="Peripheral kind"
+                name="method"
+                floatingLabelText="Endpoint http method"
                 disabled={this.isLoading()}
                 fullWidth
                 required
             >
-                {kinds.toSeq().map((value, key) => {
+                {httpMethods.toSeq().map((value, key) => {
                     const itemKey = key;
                     return (
                         <MenuItem
                             key={itemKey}
                             value={value}
-                            primaryText={value}
+                            primaryText={key}
                         />
                     );
                 }).toArray()}
@@ -46,22 +45,23 @@ export default React.createClass({
     render() {
         return (
             <Form
-                title={'Peripheral'}
+                title={'Endpoint'}
                 actions={this.props.actions}
                 source={this.props.source}
             >
-                {this._renderKindDropdown()}
                 <FormsyText
                     name="name"
-                    floatingLabelText="Peripheral name"
+                    floatingLabelText="Endpoint name"
                     fullWidth
                     required
                 />
-                <FormsyCheckbox
-                    className="form-control-checkbox"
-                    name="enabled"
-                    label="Enabled"
+                <FormsyText
+                    name="url"
+                    floatingLabelText="Endpoint url"
+                    fullWidth
+                    required
                 />
+                {this._renderHttpMethodsDropdown()}
             </Form>
         );
     }

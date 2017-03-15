@@ -14,6 +14,8 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FontIcon from 'material-ui/FontIcon';
 import MenuItem from 'material-ui/MenuItem';
 import cn from 'classnames';
+import DataSourceMixin from '../../mixins/data-source-mixin';
+import QuerySourceMixin from '../../mixins/query-source-mixin';
 import DataTable from '../data-table/data-table';
 import {
     menuIcon as menuIconCss
@@ -34,12 +36,13 @@ export default React.createClass({
         actions: React.PropTypes.object
     },
 
+    mixins: [
+        DataSourceMixin,
+        QuerySourceMixin
+    ],
+
     _onCreateClick() {
         this.props.actions.create();
-    },
-
-    _isLoading() {
-        return this.props.source.get('isLoading');
     },
 
     _getItems() {
@@ -90,7 +93,7 @@ export default React.createClass({
     render() {
         const cardClassNames = cn({
             card: true,
-            'card-loading': this._isLoading()
+            'card-loading': this.isLoading()
         });
 
         return (
@@ -100,7 +103,7 @@ export default React.createClass({
                     rows={this._getItems()}
                     total={this._getQuantity()}
                     columns={this.props.columns}
-                    isLoading={this._isLoading()}
+                    isLoading={this.isLoading()}
                 />
             </Card>
         );
