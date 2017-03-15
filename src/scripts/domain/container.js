@@ -8,6 +8,7 @@ import Logger from '../infrastructure/logging/logger';
 import AuthService from './auth/service';
 import ActivityMonitoringService from './monitoring/activity/service';
 import PeripheralsRegistryService from './registry/peripherals/service';
+import EndpointsRegistryService from './registry/endpoints/service';
 
 const SEPARATOR = '.';
 const NAMESPACES = ContainerEngine.map({
@@ -64,16 +65,16 @@ const ApplicationConainer = composeClass({
         // Activity Monitoring Service
         this.register(NAMESPACES.domain.monitoring()).service('activity', [
             NAMESPACES.infrastructure.http('client')
-        ], (httpClient) => {
-            return ActivityMonitoringService(httpClient);
-        });
+        ], ActivityMonitoringService);
 
-        // Targets Registry Service
+        // Peripherals Registry Service
         this.register(NAMESPACES.domain.registry()).service('peripherals', [
             NAMESPACES.infrastructure.http('client')
-        ], (httpClient) => {
-            return PeripheralsRegistryService(httpClient);
-        });
+        ], PeripheralsRegistryService);
+
+        this.register(NAMESPACES.domain.registry()).service('endpoints', [
+            NAMESPACES.infrastructure.http('client')
+        ], EndpointsRegistryService);
     },
 
     createLogger(source) {

@@ -14,33 +14,24 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FontIcon from 'material-ui/FontIcon';
 import MenuItem from 'material-ui/MenuItem';
 import cn from 'classnames';
-import DataTable from '../../../../common/data-table/data-table';
+import DataTable from '../data-table/data-table';
 import {
     menuIcon as menuIconCss
 } from './list.css';
 
 const DATA_PATH = ['data', 'result', 'items'];
 const QUANTITY_PATH = ['data', 'result', 'quantity'];
-const COLUMNS = [
-    'kind',
-    'name',
-    'enabled'
-];
-
 const CSS_ICON_CREATE = cn('fa', 'fa-plus', menuIconCss);
 const CSS_ICON_REMOVE = cn('fa', 'fa-minus', menuIconCss);
 const ORIGIN_ANCHOR = { horizontal: 'left', vertical: 'top' };
 
 export default React.createClass({
     propTypes: {
+        title: React.PropTypes.string,
+        columns: React.PropTypes.array,
+        editable: React.PropTypes.bool,
         source: React.PropTypes.object,
         actions: React.PropTypes.object
-    },
-
-    getInitialState() {
-        return {
-            value: 1
-        };
     },
 
     _onCreateClick() {
@@ -59,17 +50,12 @@ export default React.createClass({
         return this.props.source.getIn(QUANTITY_PATH);
     },
 
-    render() {
-        const cardClassNames = cn({
-            card: true,
-            'card-loading': this._isLoading()
-        });
-
-        return (
-            <Card className={cardClassNames}>
+    _renderHeader() {
+        if (this.props.editable) {
+            return (
                 <Toolbar>
                     <ToolbarGroup>
-                        <ToolbarTitle text="Registered peripherals" />
+                        <ToolbarTitle text={this.props.title} />
                     </ToolbarGroup>
                     <ToolbarGroup>
                         <IconMenu
@@ -89,12 +75,31 @@ export default React.createClass({
                         </IconMenu>
                     </ToolbarGroup>
                 </Toolbar>
+            );
+        }
+
+        return (
+            <Toolbar>
+                <ToolbarGroup>
+                    <ToolbarTitle text={this.props.title} />
+                </ToolbarGroup>
+            </Toolbar>
+        );
+    },
+
+    render() {
+        const cardClassNames = cn({
+            card: true,
+            'card-loading': this._isLoading()
+        });
+
+        return (
+            <Card className={cardClassNames}>
+                {this._renderHeader()}
                 <DataTable
-                    selectable
-                    multiSelectable
                     rows={this._getItems()}
                     total={this._getQuantity()}
-                    columns={COLUMNS}
+                    columns={this.props.columns}
                     isLoading={this._isLoading()}
                 />
             </Card>

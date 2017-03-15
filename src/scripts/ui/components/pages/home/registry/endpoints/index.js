@@ -5,13 +5,12 @@ import FluxContextMixin from '../../../../mixins/flux-context-mixin';
 import List from '../../../../common/list/list';
 
 const LIST_PROPS = {
-    title: 'Active peripherals',
+    title: 'Registered endpoints',
+    editable: true,
     columns: [
-        'key',
-        'kind',
-        'proximity',
-        'registered',
-        'time'
+        'name',
+        'url',
+        'method'
     ]
 };
 
@@ -23,8 +22,8 @@ export default React.createClass({
     render() {
         return (
             <AltContainer
-                stores={{ source: this.getStore('monitoring/activity') }}
-                actions={{ actions: this.getActions('monitoring/activity') }}
+                stores={{ source: this.getStore('registry/endpoints') }}
+                actions={{ actions: this.getActions('registry/endpoints') }}
                 inject={LIST_PROPS}
             >
                 <List />

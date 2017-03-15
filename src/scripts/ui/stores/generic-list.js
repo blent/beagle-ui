@@ -1,20 +1,20 @@
 import composeClass from 'compose-class';
 import { List } from 'immutable';
-import DataSource from '../../models/data-source';
-import QueryResult from '../../models/query-result';
-import { requires } from '../../../infrastructure/utils/contracts';
+import DataSource from '../models/data-source';
+import QueryResult from '../models/query-result';
+import { requires } from '../../infrastructure/utils/contracts';
 
 const PATH_QUERY_RESULT = ['data', 'result'];
 const PATH_QUERY = ['data', 'query'];
 
 export default composeClass({
-    constructor(actions, router) {
+    constructor(actions, router, editRoute) {
         requires('actions', actions);
-        requires('router', router);
 
         this.bindActions(actions);
 
         this.router = router;
+        this.editUrl = editRoute;
         this.state = DataSource({
             loading: false,
             error: null,
@@ -23,7 +23,9 @@ export default composeClass({
     },
 
     onCreate() {
-        this.router.redirect('/home/registry/peripheral');
+        if (this.router && this.editRoute) {
+            this.router.redirect(this.editRoute);
+        }
     },
 
     onFind(query) {

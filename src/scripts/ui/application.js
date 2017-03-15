@@ -1,6 +1,7 @@
 import Alt from 'alt';
 import immutableUtil from 'alt-utils/lib/ImmutableUtil';
 import Symbol from 'es6-symbol';
+import constant from 'lodash/constant';
 import {
     namespaces,
     Container
@@ -8,19 +9,16 @@ import {
 import Router from './router';
 import AuthActions from './actions/authentication';
 import AuthStore from './stores/authentication';
-import LoginRoute from './routes/login';
 import NotificationsActions from './actions/notifications';
 import NotificationsStore from './stores/notifications';
+import GenericListActions from './actions/generic-list';
+import GenericItemActions from './actions/generic-item';
+import GenericListStore from './stores/generic-list';
+import GenericItemStore from './stores/generic-item';
+import LoginRoute from './routes/login';
 import HomeRoute from './routes/home/index';
-import ActivityMonitoringActions from './actions/monitoring/activity';
-import ActivityMonitoringStore from './stores/monitoring/activity';
-import ActivityRoute from './routes/home/monitoring/activity';
-import PeripheralsRegistryActions from './actions/registry/peripherals';
-import PeripheralsRegistryStore from './stores/registry/peripherals';
-import PeripheralsRegistryRoute from './routes/home/registry/peripherals';
-import EditPeripheralActions from './actions/registry/peripheral';
-import EditPeripheralStore from './stores/registry/peripheral';
-import EditPeripheralRoute from './routes/home/registry/peripheral';
+import GenericListRoute from './routes/home/generic-list';
+import GenericItemRoute from './routes/home/generic-item';
 
 const FIELDS = {
     container: Symbol('container')
@@ -68,49 +66,56 @@ class Application extends Alt {
         // Activity Monitoring
         this.addActions('monitoring/activity', [
             namespaces.domain.monitoring('activity')
-        ], ActivityMonitoringActions);
+        ], GenericListActions);
         this.addStore('monitoring/activity', [
             namespaces.ui.actions('monitoring/activity')
-        ], ActivityMonitoringStore);
+        ], GenericListStore);
         this.addRouteHandler('home/monitoring/activity', [
             namespaces.ui.actions('monitoring/activity'),
-        ], (actions) => {
-            return ActivityRoute(actions, {
-                take: 10,
-                skip: 0
-            });
-        });
+            constant({ take: 10, skip: 0 })
+        ], GenericListRoute);
 
-        // Peripherals Registry
+        // Peripherals Registry List
         this.addActions('registry/peripherals', [
             namespaces.domain.registry('peripherals')
-        ], PeripheralsRegistryActions);
+        ], GenericListActions);
         this.addStore('registry/peripherals', [
             namespaces.ui.actions('registry/peripherals'),
-            namespaces.ui('router')
-        ], PeripheralsRegistryStore);
+            namespaces.ui('router'),
+            constant('/home/registry/peripheral')
+        ], GenericListStore);
         this.addRouteHandler('home/registry/peripherals', [
             namespaces.ui.actions('registry/peripherals'),
-        ], (actions) => {
-            return PeripheralsRegistryRoute(actions, {
-                take: 10,
-                skip: 0
-            });
-        });
+            constant({ take: 10, skip: 0 })
+        ], GenericListRoute);
 
         // Peripheral Edit Form
         this.addActions('registry/peripheral', [
             namespaces.domain.registry('peripherals')
-        ], EditPeripheralActions);
+        ], GenericItemActions);
         this.addStore('registry/peripheral', [
             namespaces.ui.actions('registry/peripheral'),
-            namespaces.ui('router')
-        ], EditPeripheralStore);
+            namespaces.ui('router'),
+            constant('/home/registry/peripherals')
+        ], GenericItemStore);
         this.addRouteHandler('home/registry/peripheral', [
             namespaces.ui.actions('registry/peripheral'),
-        ], (actions) => {
-            return EditPeripheralRoute(actions);
-        });
+        ], GenericItemRoute);
+
+
+        // Endpoints Registry List
+        this.addActions('registry/endpoints', [
+            namespaces.domain.registry('endpoints')
+        ], GenericListActions);
+        this.addStore('registry/endpoints', [
+            namespaces.ui.actions('registry/peripherals'),
+            namespaces.ui('router'),
+            constant('/home/registry/endpoint')
+        ], GenericListStore);
+        this.addRouteHandler('home/registry/endpoints', [
+            namespaces.ui.actions('registry/endpoints'),
+            constant({ take: 10, skip: 0 })
+        ], GenericListRoute);
     }
 
     addActions(name, dependencies = [], constructor) {
