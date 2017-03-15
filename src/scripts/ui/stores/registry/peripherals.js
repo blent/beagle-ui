@@ -1,10 +1,11 @@
 import composeClass from 'compose-class';
 import { List } from 'immutable';
-import map from 'lodash/map';
 import DataSource from '../../models/data-source';
 import QueryResult from '../../models/query-result';
-import Peripheral from '../../models/peripheral';
 import { requires } from '../../../infrastructure/utils/contracts';
+
+const PATH_QUERY_RESULT = ['data', 'result'];
+const PATH_QUERY = ['data', 'query'];
 
 export default composeClass({
     constructor(actions, router) {
@@ -29,7 +30,8 @@ export default composeClass({
         this.setState(this.state.withMutations((state) => {
             return state
                 .set('isLoading', true)
-                .setIn(['data', 'query'], query);
+                .setIn(PATH_QUERY, query)
+                .setIn(PATH_QUERY_RESULT, List());
         }));
     },
 
@@ -38,7 +40,7 @@ export default composeClass({
             return state
                 .set('isLoading', false)
                 .set('error', null)
-                .setIn(['data', 'result'], List(map(entries, Peripheral)));
+                .setIn(PATH_QUERY_RESULT, entries);
         }));
     },
 
@@ -46,8 +48,7 @@ export default composeClass({
         this.setState(this.state.withMutations((state) => {
             return state
                 .set('isLoading', false)
-                .set('error', err)
-                .setIn(['data', 'result'], List());
+                .set('error', err);
         }));
     }
 });

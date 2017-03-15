@@ -19,8 +19,8 @@ export default composeClass({
     login(username, password) {
         this.service
           .login(username, password)
-          .then(() => {
-              this.loginComplete(username);
+          .then((credentials) => {
+              this.loginComplete(credentials);
               return null;
           })
           .catch(err => this.loginFail(err));
@@ -31,7 +31,7 @@ export default composeClass({
     logout() {
         this.service
           .logout()
-          .then(() => this.logoutComplete())
+          .then(credentials => this.logoutComplete(credentials))
           .catch(err => this.logoutFail(err));
 
         return this;

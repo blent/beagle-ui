@@ -1,6 +1,5 @@
 import composeClass from 'compose-class';
 import DataSource from '../../models/data-source';
-import Peripheral from '../../models/peripheral';
 import { requires } from '../../../infrastructure/utils/contracts';
 
 export default composeClass({
@@ -14,21 +13,26 @@ export default composeClass({
         this.state = DataSource({
             loading: false,
             error: null,
-            data: Peripheral()
+            data: null
         });
     },
 
     onCancel() {
+        this.setState(this.state.withMutations((state) => {
+            return state
+                .set('isLoading', true)
+                .set(['data'], null);
+        }));
+
         setTimeout(() => {
             this.router.redirect('/home/registry/peripherals');
         });
     },
 
-    onGet(id) {
+    onGet() {
         this.setState(this.state.withMutations((state) => {
             return state
-                .set('isLoading', true)
-                .set(['data'], Peripheral({ id }));
+                .set('isLoading', true);
         }));
     },
 
@@ -37,7 +41,7 @@ export default composeClass({
             return state
                 .set('isLoading', false)
                 .set('error', null)
-                .set('data', Peripheral(peripheral));
+                .set('data', peripheral);
         }));
     },
 

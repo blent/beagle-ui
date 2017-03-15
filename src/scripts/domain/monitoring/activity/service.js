@@ -1,7 +1,10 @@
 import composeClass from 'compose-class';
 import Symbol from 'es6-symbol';
 import get from 'lodash/get';
-import { requires } from '../../infrastructure/utils/contracts';
+import map from 'lodash/map';
+import { List } from 'immutable';
+import { requires } from '../../../infrastructure/utils/contracts';
+import Activity from './peripheral-activity';
 
 const FIELDS = {
     http: Symbol('http')
@@ -22,7 +25,9 @@ const ActivityMonitoringService = composeClass({
                 take: get(query, 'take', 10),
                 skip: get(query, 'skip', 0)
             }
-        }).then(resp => resp.body);
+        }).then((res) => {
+            return List(map(res.body, i => Activity(i)));
+        });
     }
 });
 

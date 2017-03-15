@@ -9,7 +9,15 @@ import {
   ToolbarTitle
 } from 'material-ui/Toolbar';
 import RaisedButton from 'material-ui/RaisedButton';
+import MenuItem from 'material-ui/MenuItem';
+import Formsy from 'formsy-react';
+import {
+    FormsyCheckbox,
+    FormsySelect,
+    FormsyText
+} from 'formsy-material-ui/lib';
 import cn from 'classnames';
+import kinds from '../../../../../../domain/registry/peripherals/kind';
 
 const PATH_ID = ['data', 'id'];
 
@@ -20,9 +28,34 @@ export default React.createClass({
     },
 
     getInitialState() {
+        const model = this.props.source.get('data');
+
         return {
-            data: this.props.source.get('data').toJS()
+            canSubmit: !this._isPeripheralNew(),
+            model: model ? model.toJS() : {}
         };
+    },
+
+    _onCancelClick() {
+        if (!this._isLoading()) {
+            this.props.actions.cancel();
+        }
+    },
+
+    _onValid() {
+        this.setState({
+            canSubmit: true
+        });
+    },
+
+    _onInvalid() {
+        this.setState({
+            canSubmit: false
+        });
+    },
+
+    _isFormValid() {
+        return this.state.canSubmit;
     },
 
     _isLoading() {
@@ -30,7 +63,7 @@ export default React.createClass({
     },
 
     _isPeripheralNew() {
-        return this.props.source.getIn(PATH_ID) === 0;
+        return !this.props.source.getIn(PATH_ID) > 0;
     },
 
     _renderButtons() {
@@ -39,7 +72,7 @@ export default React.createClass({
                 key="save"
                 label="Save"
                 primary
-                disabled={this._isLoading()}
+                disabled={this._isLoading() || !this._isFormValid()}
             />
         ];
 
@@ -66,10 +99,27 @@ export default React.createClass({
         return buttons;
     },
 
-    _onCancelClick() {
-        if (!this._isLoading()) {
-            this.props.actions.cancel();
-        }
+    _renderKindDropdown() {
+        return (
+            <FormsySelect
+                name="kind"
+                floatingLabelText="Peripheral kind"
+                disabled={this._isLoading()}
+                fullWidth
+                required
+            >
+                {kinds.toSeq().map((value, key) => {
+                    const itemKey = key;
+                    return (
+                        <MenuItem
+                            key={itemKey}
+                            value={value}
+                            primaryText={value}
+                        />
+                    );
+                }).toArray()}
+            </FormsySelect>
+        );
     },
 
     render() {
@@ -79,14 +129,37 @@ export default React.createClass({
         });
         return (
             <Card className={cardClassNames}>
-                <Toolbar>
-                    <ToolbarGroup>
-                        <ToolbarTitle text="Registered peripherals" />
-                    </ToolbarGroup>
-                    <ToolbarGroup>
-                        {this._renderButtons()}
-                    </ToolbarGroup>
-                </Toolbar>
+                <Formsy.Form
+                    className="form"
+                    onValid={this._onValid}
+                    onInvalid={this._onInvalid}
+                >
+                    <Toolbar>
+                        <ToolbarGroup>
+                            <ToolbarTitle text="Registered peripherals" />
+                        </ToolbarGroup>
+                        <ToolbarGroup>
+                            {this._renderButtons()}
+                        </ToolbarGroup>
+                    </Toolbar>
+
+                    <div
+                        className={cardClassNames}
+                    >
+                        {this._renderKindDropdown()}
+                        <FormsyText
+                            name="name"
+                            floatingLabelText="Peripheral name"
+                            fullWidth
+                            required
+                        />
+                        <FormsyCheckbox
+                            className="form-control-checkbox"
+                            name="enabled"
+                            label="Enabled"
+                        />
+                    </div>
+                </Formsy.Form>
             </Card>
         );
     }

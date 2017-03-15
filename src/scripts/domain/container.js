@@ -6,8 +6,8 @@ import { requires } from '../infrastructure/utils/contracts';
 import HttpClient from '../infrastructure/http/client';
 import Logger from '../infrastructure/logging/logger';
 import AuthService from './auth/service';
-import ActivityMonitoringService from './monitoring/activity';
-import PeripheralsRegistryService from './registry/peripherals';
+import ActivityMonitoringService from './monitoring/activity/service';
+import PeripheralsRegistryService from './registry/peripherals/service';
 
 const SEPARATOR = '.';
 const NAMESPACES = ContainerEngine.map({

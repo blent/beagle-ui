@@ -1,33 +1,47 @@
 import composeClass from 'compose-class';
 import Symbol from 'es6-symbol';
 import Promise from 'bluebird';
+import Credentials from './credentials';
 
 const FIELDS = {
-    endpoint: Symbol('endpoint'),
-    isAuthenticated: Symbol('isAuthenticated')
+    http: Symbol('http'),
+    credentials: Symbol('credentials')
 };
 
-const AuthService = composeClass({
+const AuthenticationService = composeClass({
     constructor(params = {}) {
-        this[FIELDS.endpoint] = params.endpoint;
-        this[FIELDS.isAuthenticated] = false;
+        this[FIELDS.http] = params.http;
+        this[FIELDS.credentials] = Credentials();
     },
 
-    isAuthenticated() {
-        return Promise.fromCallback(done => setTimeout(() => done(null, this[FIELDS.isAuthenticated]), 500));
+    getCredentials() {
+        return this[FIELDS.credentials];
     },
 
-    login() {
-        this[FIELDS.isAuthenticated] = true;
-        return Promise.fromCallback(done => setTimeout(done, 1000));
+    login(username) {
+        return Promise.fromCallback((done) => {
+            setTimeout(() => {
+                this[FIELDS.credentials] = this[FIELDS.credentials].merge({
+                    username,
+                    authenticated: true
+                });
+
+                done(null, this[FIELDS.credentials]);
+            }, 1000);
+        });
     },
 
     logout() {
-        this[FIELDS.isAuthenticated] = false;
-        return Promise.resolve();
+        return Promise.fromCallback((done) => {
+            setTimeout(() => {
+                this[FIELDS.credentials] = this[FIELDS.credentials].set('authenticated', false);
+
+                done(null, this[FIELDS.credentials]);
+            }, 1000);
+        });
     }
 });
 
 export default function create(...args) {
-    return new AuthService(...args);
+    return new AuthenticationService(...args);
 }

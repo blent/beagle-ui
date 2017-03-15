@@ -1,6 +1,6 @@
 import { Record } from 'immutable';
 
-const IBeaconPeripheralModel = Record({
+const IBeaconPeripheral = Record({
     id: 0,
     kind: null,
     name: null,
@@ -12,5 +12,5 @@ const IBeaconPeripheralModel = Record({
 });
 
 export default function create(values) {
-    return new IBeaconPeripheralModel(values);
+    return new IBeaconPeripheral(values);
 }
