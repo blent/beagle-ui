@@ -6,6 +6,7 @@ import includes from 'lodash/includes';
 import indexOf from 'lodash/indexOf';
 import merge from 'lodash/merge';
 import slice from 'lodash/slice';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import FluxContextMixin from '../mixins/flux-context-mixin';
 
 export default React.createClass({
@@ -14,11 +15,12 @@ export default React.createClass({
     },
 
     mixins: [
+        PureRenderMixin,
         FluxContextMixin
     ],
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.notifications) {
+        if (this.props.notifications !== nextProps.notifications) {
             nextProps.notifications.forEach(bind(this._addNotification, this));
         }
     },

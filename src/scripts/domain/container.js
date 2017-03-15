@@ -56,7 +56,7 @@ const ApplicationConainer = composeClass({
         this.register(NAMESPACES.infrastructure.http()).service('client', [
             'settings'
         ], (settings) => {
-            return HttpClient(settings.get(['http', 'api']));
+            return HttpClient(settings.getIn(['http', 'api']));
         });
 
         // Authentication Service

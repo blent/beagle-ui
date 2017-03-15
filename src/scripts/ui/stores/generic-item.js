@@ -37,12 +37,12 @@ export default composeClass({
         }));
     },
 
-    onGetComplete(peripheral) {
+    onGetComplete(model) {
         this.setState(this.state.withMutations((state) => {
             return state
                 .set('isLoading', false)
                 .set('error', null)
-                .set('data', peripheral);
+                .set('data', model);
         }));
     },
 
@@ -52,5 +52,29 @@ export default composeClass({
                 .set('isLoading', false)
                 .set('error', err);
         }));
-    }
+    },
+
+    onSave() {
+        this.setState(this.state.withMutations((state) => {
+            return state
+              .set('isLoading', true);
+        }));
+    },
+
+    onSaveComplete(model) {
+        this.setState(this.state.withMutations((state) => {
+            return state
+                .set('isLoading', false)
+                .set('error', null)
+                .set('data', model);
+        }));
+    },
+
+    onSaveFail(err) {
+        this.setState(this.state.withMutations((state) => {
+            return state
+                .set('isLoading', false)
+                .set('error', err);
+        }));
+    },
 });

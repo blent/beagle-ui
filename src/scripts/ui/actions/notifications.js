@@ -1,4 +1,5 @@
 import composeClass from 'compose-class';
+import levels from '../models/notification-levels';
 
 /**
  * Represents a notifications actions.
@@ -17,6 +18,22 @@ export default composeClass({
             message,
             level
         };
+    },
+
+    info(title, message) {
+        return this.notify(title, message, levels.INFO);
+    },
+
+    success(title, message) {
+        return this.notify(title, message, levels.SUCCESS);
+    },
+
+    warning(title, message) {
+        return this.notify(title, message, levels.WARNING);
+    },
+
+    error(title, message) {
+        return this.notify(title, message, levels.ERROR);
     },
 
     /**

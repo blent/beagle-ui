@@ -19,10 +19,7 @@ export default composeClass({
     login(username, password) {
         this.service
           .login(username, password)
-          .then((credentials) => {
-              this.loginComplete(credentials);
-              return null;
-          })
+          .then(credentials => this.loginComplete(credentials))
           .catch(err => this.loginFail(err));
 
         return null;

@@ -65,7 +65,9 @@ class Application extends Alt {
 
         // Activity Monitoring
         this.addActions('monitoring/activity', [
-            namespaces.domain.monitoring('activity')
+            constant('peripheral activity'),
+            namespaces.domain.monitoring('activity'),
+            namespaces.ui.actions('notifications'),
         ], GenericListActions);
         this.addStore('monitoring/activity', [
             namespaces.ui.actions('monitoring/activity')
@@ -77,7 +79,9 @@ class Application extends Alt {
 
         // Peripherals Registry List
         this.addActions('registry/peripherals', [
-            namespaces.domain.registry('peripherals')
+            constant('peripherals'),
+            namespaces.domain.registry('peripherals'),
+            namespaces.ui.actions('notifications')
         ], GenericListActions);
         this.addStore('registry/peripherals', [
             namespaces.ui.actions('registry/peripherals'),
@@ -91,7 +95,9 @@ class Application extends Alt {
 
         // Peripheral Edit Form
         this.addActions('registry/peripheral', [
-            namespaces.domain.registry('peripherals')
+            constant('peripheral'),
+            namespaces.domain.registry('peripherals'),
+            namespaces.ui.actions('notifications'),
         ], GenericItemActions);
         this.addStore('registry/peripheral', [
             namespaces.ui.actions('registry/peripheral'),
@@ -105,7 +111,9 @@ class Application extends Alt {
 
         // Endpoints Registry List
         this.addActions('registry/endpoints', [
-            namespaces.domain.registry('endpoints')
+            constant('endpoints'),
+            namespaces.domain.registry('endpoints'),
+            namespaces.ui.actions('notifications'),
         ], GenericListActions);
         this.addStore('registry/endpoints', [
             namespaces.ui.actions('registry/endpoints'),
@@ -119,7 +127,9 @@ class Application extends Alt {
 
         // Endpoint Edit Form
         this.addActions('registry/endpoint', [
-            namespaces.domain.registry('endpoints')
+            constant('endpoint'),
+            namespaces.domain.registry('endpoints'),
+            namespaces.ui.actions('notifications')
         ], GenericItemActions);
         this.addStore('registry/endpoint', [
             namespaces.ui.actions('registry/endpoint'),

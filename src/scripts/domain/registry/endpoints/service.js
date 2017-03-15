@@ -2,6 +2,7 @@ import composeClass from 'compose-class';
 import Symbol from 'es6-symbol';
 import get from 'lodash/get';
 import map from 'lodash/map';
+import merge from 'lodash/merge';
 import constant from 'lodash/constant';
 import isEmpty from 'lodash/isEmpty';
 import { List } from 'immutable';
@@ -48,30 +49,30 @@ const EndpointsService = composeClass({
         });
     },
 
-    create(endpoint) {
-        if (isEmpty(endpoint) || !isImmutable(endpoint)) {
-            return Promise.reject(new Error('Invalid model'));
-        }
-
-        return this[FIELDS.http].execute({
-            method: 'POST',
-            url: 'registry/endpoints',
-            data: endpoint.toJS()
-        }).then((res) => {
-            return endpoint.set('id', res.body);
-        });
-    },
-
     save(endpoint) {
-        if (isEmpty(endpoint) || !isImmutable(endpoint)) {
+        if (isEmpty(endpoint)) {
             return Promise.reject(new Error('Invalid model'));
         }
 
+        let model = endpoint;
+
+        if (isImmutable(endpoint)) {
+            model = endpoint.toJS();
+        }
+
+        const isNew = !(model.id > 0);
+
         return this[FIELDS.http].execute({
-            method: 'PUT',
-            url: 'registry/endpoints',
-            data: endpoint.toJS()
-        }).then(NO_RETURN);
+            method: isNew ? 'POST' : 'PUT',
+            url: 'registry/endpoint',
+            data: model
+        }).then((res) => {
+            if (isNew) {
+                return Endpoint(merge({ id: res.body }, model));
+            }
+
+            return Endpoint(merge({}, model));
+        });
     },
 
     delete(id) {

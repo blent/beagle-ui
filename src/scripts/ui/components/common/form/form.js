@@ -20,6 +20,7 @@ export default React.createClass({
         title: React.PropTypes.string,
         source: React.PropTypes.object,
         actions: React.PropTypes.object,
+        notifications: React.PropTypes.object,
         children: React.PropTypes.any
     },
 
@@ -39,6 +40,18 @@ export default React.createClass({
     _onCancelClick() {
         if (!this.isLoading()) {
             this.props.actions.cancel();
+        }
+    },
+
+    _onValidSubmit(model) {
+        if (!this.isLoading()) {
+            this.props.actions.save(model);
+        }
+    },
+
+    _onInvalidSubmit(errors) {
+        if (!this.isLoading()) {
+            this.props.notifications.error('Form is invalid', errors);
         }
     },
 
@@ -67,6 +80,7 @@ export default React.createClass({
             <RaisedButton
                 key="save"
                 label="Save"
+                type="submit"
                 primary
                 disabled={this.isLoading() || !this._isFormValid()}
             />
@@ -106,6 +120,8 @@ export default React.createClass({
                     className="form"
                     onValid={this._onValid}
                     onInvalid={this._onInvalid}
+                    onValidSubmit={this._onValidSubmit}
+                    onInvalidSubmit={this._onInvalidSubmit}
                 >
                     <Toolbar>
                         <ToolbarGroup>
