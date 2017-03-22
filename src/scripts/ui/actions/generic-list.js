@@ -18,6 +18,8 @@ export default composeClass({
 
         this.generateActions(
             'create',
+            'deleteComplete',
+            'deleteFail',
             'findComplete',
             'findFail'
         );
@@ -28,6 +30,14 @@ export default composeClass({
             .then(onAsyncComplete(this, 'find'))
             .catch(onAsyncFail(this, 'find'));
 
-        return null;
+        return query;
+    },
+
+    delete(entries) {
+        this.service.delete(entries)
+          .then(() => this.deleteComplete(entries))
+          .catch(onAsyncFail(this, 'delete'));
+
+        return entries;
     }
 });

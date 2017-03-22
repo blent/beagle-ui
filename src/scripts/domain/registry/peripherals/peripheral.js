@@ -9,7 +9,7 @@ const IBeaconPeripheral = Record({
     minor: null,
     enabled: false,
     subscribers: null
-});
+}, 'IBeaconPeripheral');
 
 export default function create(values) {
     return new IBeaconPeripheral(values);

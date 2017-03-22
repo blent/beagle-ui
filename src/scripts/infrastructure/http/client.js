@@ -79,7 +79,7 @@ const HttpClient = composeClass({
                 request.query(options.params);
             }
 
-            if ((methodType === 'post' || methodType === 'put') && options.data) {
+            if ((methodType === 'post' || methodType === 'put' || methodType === 'del') && options.data) {
                 request.send(options.data);
             }
 

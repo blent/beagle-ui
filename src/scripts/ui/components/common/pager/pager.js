@@ -99,7 +99,7 @@ export default React.createClass({
     },
 
     _renderNextButton() {
-        if (this.props.currentPage <= this._numPages()) {
+        if (this.props.currentPage < this._numPages()) {
             return (
                 <FlatButton
                     primary
@@ -147,7 +147,7 @@ export default React.createClass({
             <span
                 className={currentCss}
             >
-                {`${this.currentPage} of ${this._numPages()}`}
+                {`${this.props.currentPage} of ${this._numPages()}`}
             </span>
         );
     },

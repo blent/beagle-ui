@@ -1,13 +1,13 @@
 import { Record } from 'immutable';
 
-const PeripheralActivityModel = Record({
+const PeripheralActivity = Record({
     key: '',
     kind: '',
     proximity: '',
     registered: false,
     time: null
-});
+}, 'PeripheralActivity');
 
 export default function create(values) {
-    return new PeripheralActivityModel(values);
+    return new PeripheralActivity(values);
 }

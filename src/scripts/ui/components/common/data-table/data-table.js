@@ -5,16 +5,19 @@ import {
     TableHeader,
     TableHeaderColumn,
     TableRow,
-    TableRowColumn,
-    TableFooter
+    TableRowColumn
 } from 'material-ui/Table';
 import isObject from 'lodash/isObject';
 import forEach from 'lodash/forEach';
 import map from 'lodash/map';
+import cn from 'classnames';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import DynamicEventsMixin from '../../mixins/dynamic-events-mixin';
 import Loader from '../loader/loader';
 import Pager from '../pager/pager';
+import {
+    clickable as clickabaleCss
+} from './data-table.css';
 
 const WRAPPER_STYLE = {
     minHeight: '100px'
@@ -23,9 +26,10 @@ export default React.createClass({
     propTypes: {
         className: React.PropTypes.string,
         tableClassName: React.PropTypes.string,
+        clickable: React.PropTypes.bool,
         selectable: React.PropTypes.bool,
-        fixedHeader: React.PropTypes.bool,
         multiSelectable: React.PropTypes.bool,
+        fixedHeader: React.PropTypes.bool,
         columns: React.PropTypes.array,
         columnMetadata: React.PropTypes.array,
         rows: React.PropTypes.object,
@@ -35,7 +39,8 @@ export default React.createClass({
         onNextPage: React.PropTypes.func,
         onPrevPage: React.PropTypes.func,
         onGotoPage: React.PropTypes.func,
-        isLoading: React.PropTypes.bool
+        isLoading: React.PropTypes.bool,
+        onRowSelection: React.PropTypes.func
     },
 
     mixins: [
@@ -45,9 +50,10 @@ export default React.createClass({
 
     getDefaultProps() {
         return {
+            clickable: false,
             selectable: false,
-            fixedHeader: true,
             multiSelectable: false,
+            fixedHeader: true,
             currentPage: 1,
             perPage: 10,
             total: 1
@@ -92,7 +98,6 @@ export default React.createClass({
                 return (
                     <TableHeaderColumn
                         key={metadata.columnName}
-                        tooltip={metadata}
                     >
                         {metadata.displayName || metadata.columnName}
                     </TableHeaderColumn>
@@ -102,7 +107,6 @@ export default React.createClass({
             return (
                 <TableHeaderColumn
                     key={metadata}
-                    tooltip={metadata}
                 >
                     {metadata}
                 </TableHeaderColumn>
@@ -127,11 +131,18 @@ export default React.createClass({
             return null;
         }
 
+        const className = cn({
+            [clickabaleCss]: this.props.clickable
+        });
+
         return this.props.rows.map((row, idx) => {
             const key = `${idx}_row`;
 
             return (
-                <TableRow key={key}>
+                <TableRow
+                    key={key}
+                    className={className}
+                >
                     {this._renderRow(row)}
                 </TableRow>
             );
@@ -173,19 +184,21 @@ export default React.createClass({
                     multiSelectable={this.props.multiSelectable}
                     fixedHeader={this.props.fixedHeader}
                     wrapperStyle={WRAPPER_STYLE}
+                    onRowSelection={this.props.onRowSelection}
                 >
                     <TableHeader>
                         <TableRow>
                             {this._renderColumns()}
                         </TableRow>
                     </TableHeader>
-                    <TableBody>
+                    <TableBody
+                        deselectOnClickaway={false}
+                        showRowHover={this.props.clickable}
+                    >
                         {this._renderRows()}
                     </TableBody>
-                    <TableFooter>
-                        {this._renderPager()}
-                    </TableFooter>
                 </Table>
+                {this._renderPager()}
             </div>
         );
     }

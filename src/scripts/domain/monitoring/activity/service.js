@@ -2,7 +2,7 @@ import composeClass from 'compose-class';
 import Symbol from 'es6-symbol';
 import get from 'lodash/get';
 import map from 'lodash/map';
-import { List } from 'immutable';
+import { Map, List } from 'immutable';
 import { requires } from '../../../infrastructure/utils/contracts';
 import Activity from './peripheral-activity';
 
@@ -26,7 +26,10 @@ const ActivityMonitoringService = composeClass({
                 skip: get(query, 'skip', 0)
             }
         }).then((res) => {
-            return List(map(res.body, i => Activity(i)));
+            return Map({
+                items: List(map(res.body.items, i => Activity(i))),
+                quantity: res.body.quantity
+            });
         });
     }
 });

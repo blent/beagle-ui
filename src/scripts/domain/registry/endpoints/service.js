@@ -5,7 +5,8 @@ import map from 'lodash/map';
 import merge from 'lodash/merge';
 import constant from 'lodash/constant';
 import isEmpty from 'lodash/isEmpty';
-import { List } from 'immutable';
+import isNil from 'lodash/isNil';
+import { Map, List } from 'immutable';
 import { requires } from '../../../infrastructure/utils/contracts';
 import isImmutable from '../../../infrastructure/utils/is-immutable';
 import Endpoint from './endpoint';
@@ -32,7 +33,10 @@ const EndpointsService = composeClass({
                 skip: get(query, 'skip', 0)
             }
         }).then((res) => {
-            return List(map(res.body, i => Endpoint(i)));
+            return Map({
+                items: List(map(res.body.items, i => Endpoint(i))),
+                quantity: res.body.quantity
+            });
         });
     },
 
@@ -75,14 +79,31 @@ const EndpointsService = composeClass({
         });
     },
 
-    delete(id) {
-        if (id < 0) {
-            return Promise.reject(new Error('Invalid id'));
+    delete(endpoints) {
+        if (isNil(endpoints)) {
+            return Promise.reject(new Error('Missed endpoint(s)'));
+        }
+
+        if (List.isList(endpoints) && endpoints.size === 0) {
+            return Promise.reject(new Error('Missed endpoint(s)'));
+        }
+
+        if (!List.isList(endpoints) && (isNil(endpoints.id) || endpoints.id <= 0)) {
+            return Promise.reject(new Error('Invalid endpoint'));
+        }
+
+        const data = [];
+
+        if (List.isList(endpoints)) {
+            endpoints.forEach(e => data.push(e.id));
+        } else {
+            data.push(endpoints.id);
         }
 
         return this[FIELDS.http].execute({
-            method: 'PUT',
-            url: `registry/endpoints/${id}`
+            method: 'DELETE',
+            url: 'registry/endpoints',
+            data
         }).then(NO_RETURN);
     }
 });

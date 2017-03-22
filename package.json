@@ -27,7 +27,7 @@
     "history": "3.2.1",
     "immutable": "3.8.1",
     "lodash": "4.17.4",
-    "material-ui": "^0.17.0",
+    "material-ui": "^0.17.1",
     "namespaces-js": "1.2.0",
     "observable-mixin": "^1.0.0",
     "react": "15.4.2",

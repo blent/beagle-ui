@@ -6,7 +6,7 @@ const Endpoint = Record({
     url: null,
     method: 'GET',
     headers: null
-});
+}, 'Endpoint');
 
 export default function create(values) {
     return new Endpoint(values);

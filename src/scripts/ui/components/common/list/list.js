@@ -14,6 +14,8 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FontIcon from 'material-ui/FontIcon';
 import MenuItem from 'material-ui/MenuItem';
 import cn from 'classnames';
+import { List } from 'immutable';
+import map from 'lodash/map';
 import DataSourceMixin from '../../mixins/data-source-mixin';
 import QuerySourceMixin from '../../mixins/query-source-mixin';
 import DataTable from '../data-table/data-table';
@@ -41,8 +43,37 @@ export default React.createClass({
         QuerySourceMixin
     ],
 
+    getInitialState() {
+        return {
+            selected: 'none'
+        };
+    },
+
+    _onRowSelection(selected) {
+        this.setState({ selected });
+    },
+
     _onCreateClick() {
         this.props.actions.create();
+    },
+
+    _onDeleteClick() {
+        if (!this.state.selected || this.state.selected.length === 0) {
+            return;
+        }
+
+        if (this.state.selected === 'none') {
+            return;
+        }
+
+        if (this.state.selected === 'all') {
+            this.props.actions.delete(this._getItems());
+            return;
+        }
+
+        this.props.actions.delete(List(map(this.state.selected, (idx) => {
+            return this._getItems().get(idx);
+        })));
     },
 
     _getItems() {
@@ -55,6 +86,28 @@ export default React.createClass({
 
     _renderHeader() {
         if (this.props.editable) {
+            let menuItems = null;
+
+            if (!this.state.selected || this.state.selected === 'none') {
+                menuItems = [
+                    <MenuItem
+                        key="create"
+                        leftIcon={<FontIcon className={CSS_ICON_CREATE} />}
+                        primaryText="Create"
+                        onClick={this._onCreateClick}
+                    />
+                ];
+            } else {
+                menuItems = [
+                    <MenuItem
+                        key="remove"
+                        leftIcon={<FontIcon className={CSS_ICON_REMOVE} />}
+                        primaryText="Remove"
+                        onClick={this._onDeleteClick}
+                    />
+                ];
+            }
+
             return (
                 <Toolbar>
                     <ToolbarGroup>
@@ -66,15 +119,7 @@ export default React.createClass({
                             anchorOrigin={ORIGIN_ANCHOR}
                             targetOrigin={ORIGIN_ANCHOR}
                         >
-                            <MenuItem
-                                leftIcon={<FontIcon className={CSS_ICON_CREATE} />}
-                                primaryText="Create"
-                                onClick={this._onCreateClick}
-                            />
-                            <MenuItem
-                                leftIcon={<FontIcon className={CSS_ICON_REMOVE} />}
-                                primaryText="Remove"
-                            />
+                            {menuItems}
                         </IconMenu>
                     </ToolbarGroup>
                 </Toolbar>
@@ -104,6 +149,10 @@ export default React.createClass({
                     total={this._getQuantity()}
                     columns={this.props.columns}
                     isLoading={this.isLoading()}
+                    clickable={this.props.editable}
+                    selectable={this.props.editable}
+                    multiSelectable={this.props.editable}
+                    onRowSelection={this._onRowSelection}
                 />
             </Card>
         );

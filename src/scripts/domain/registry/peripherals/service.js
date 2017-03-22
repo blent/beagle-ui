@@ -4,7 +4,7 @@ import get from 'lodash/get';
 import map from 'lodash/map';
 import constant from 'lodash/constant';
 import isEmpty from 'lodash/isEmpty';
-import { List } from 'immutable';
+import { Map, List } from 'immutable';
 import { requires } from '../../../infrastructure/utils/contracts';
 import isImmutable from '../../../infrastructure/utils/is-immutable';
 import Peripheral from './peripheral';
@@ -31,7 +31,10 @@ const PeripheralsService = composeClass({
                 skip: get(query, 'skip', 0)
             }
         }).then((res) => {
-            return List(map(res.body, i => Peripheral(i)));
+            return Map({
+                items: List(map(res.body.items, i => Peripheral(i))),
+                quantity: res.body.quantity
+            });
         });
     },
 
