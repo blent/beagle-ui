@@ -11,6 +11,8 @@ import {
 import RaisedButton from 'material-ui/RaisedButton';
 import Formsy from 'formsy-react';
 import cn from 'classnames';
+import merge from 'lodash/merge';
+import Loader from '../../common/loader/loader';
 import DataSourceMixin from '../../mixins/data-source-mixin';
 
 const PATH_ID = ['data', 'id'];
@@ -33,8 +35,15 @@ export default React.createClass({
 
         return {
             canSubmit: !this._isModelNew(),
+            isDirty: this._isModelNew(),
             model: model ? model.toJS() : {}
         };
+    },
+
+    _onDeleteClick() {
+        if (!this.isLoading()) {
+            this.props.actions.delete(this.props.source.get('data'));
+        }
     },
 
     _onCancelClick() {
@@ -45,7 +54,13 @@ export default React.createClass({
 
     _onValidSubmit(model) {
         if (!this.isLoading()) {
-            this.props.actions.save(model);
+            if (this._isModelNew()) {
+                this.props.actions.save(model);
+            } else {
+                this.props.actions.save(merge({
+                    id: this.props.source.getIn(PATH_ID)
+                }, model));
+            }
         }
     },
 
@@ -67,12 +82,22 @@ export default React.createClass({
         });
     },
 
+    _onChange(currentValues, isChanged) {
+        this.setState({
+            isDirty: isChanged
+        });
+    },
+
     _isFormValid() {
         return this.state.canSubmit;
     },
 
     _isModelNew() {
         return !this.props.source.getIn(PATH_ID) > 0;
+    },
+
+    _isDirty() {
+        return this.state.isDirty;
     },
 
     _renderButtons() {
@@ -82,7 +107,7 @@ export default React.createClass({
                 label="Save"
                 type="submit"
                 primary
-                disabled={this.isLoading() || !this._isFormValid()}
+                disabled={this.isLoading() || !this._isFormValid() || !this._isDirty()}
             />
         ];
 
@@ -92,6 +117,7 @@ export default React.createClass({
                     key="delete"
                     label="Delete"
                     disabled={this.isLoading()}
+                    onClick={this._onDeleteClick}
                     secondary
                 />
             );
@@ -109,6 +135,14 @@ export default React.createClass({
         return buttons;
     },
 
+    _renderLoader() {
+        if (this.isLoading()) {
+            return <Loader type="linear" />;
+        }
+
+        return null;
+    },
+
     render() {
         const cardClassNames = cn({
             card: true,
@@ -122,6 +156,7 @@ export default React.createClass({
                     onInvalid={this._onInvalid}
                     onValidSubmit={this._onValidSubmit}
                     onInvalidSubmit={this._onInvalidSubmit}
+                    onChange={this._onChange}
                 >
                     <Toolbar>
                         <ToolbarGroup>
@@ -131,7 +166,7 @@ export default React.createClass({
                             {this._renderButtons()}
                         </ToolbarGroup>
                     </Toolbar>
-
+                    {this._renderLoader()}
                     <div
                         className={cardClassNames}
                     >

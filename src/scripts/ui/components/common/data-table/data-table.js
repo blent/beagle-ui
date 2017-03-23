@@ -168,7 +168,7 @@ export default React.createClass({
 
     _renderLoader() {
         if (this.props.isLoading) {
-            return <Loader />;
+            return <Loader type="linear" />;
         }
 
         return null;

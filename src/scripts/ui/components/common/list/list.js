@@ -15,6 +15,8 @@ import FontIcon from 'material-ui/FontIcon';
 import MenuItem from 'material-ui/MenuItem';
 import cn from 'classnames';
 import { List } from 'immutable';
+import isEmpty from 'lodash/isEmpty';
+import isArray from 'lodash/isArray';
 import map from 'lodash/map';
 import DataSourceMixin from '../../mixins/data-source-mixin';
 import QuerySourceMixin from '../../mixins/query-source-mixin';
@@ -27,6 +29,7 @@ const DATA_PATH = ['data', 'result', 'items'];
 const QUANTITY_PATH = ['data', 'result', 'quantity'];
 const CSS_ICON_CREATE = cn('fa', 'fa-plus', menuIconCss);
 const CSS_ICON_REMOVE = cn('fa', 'fa-minus', menuIconCss);
+const CSS_ICON_EDIT = cn('fa', 'fa-pencil-square-o', menuIconCss);
 const ORIGIN_ANCHOR = { horizontal: 'left', vertical: 'top' };
 
 export default React.createClass({
@@ -55,6 +58,10 @@ export default React.createClass({
 
     _onCreateClick() {
         this.props.actions.create();
+    },
+
+    _onEditClick() {
+        this.props.actions.edit(this._getItems().get(this.state.selected[0]));
     },
 
     _onDeleteClick() {
@@ -88,7 +95,7 @@ export default React.createClass({
         if (this.props.editable) {
             let menuItems = null;
 
-            if (!this.state.selected || this.state.selected === 'none') {
+            if (isEmpty(this.state.selected) || this.state.selected === 'none') {
                 menuItems = [
                     <MenuItem
                         key="create"
@@ -98,14 +105,27 @@ export default React.createClass({
                     />
                 ];
             } else {
-                menuItems = [
+                menuItems = [];
+
+                if (isArray(this.state.selected) && this.state.selected.length === 1) {
+                    menuItems.push(
+                        <MenuItem
+                            key="edit"
+                            leftIcon={<FontIcon className={CSS_ICON_EDIT} />}
+                            primaryText="Edit"
+                            onClick={this._onEditClick}
+                        />
+                    );
+                }
+
+                menuItems.push(
                     <MenuItem
                         key="remove"
                         leftIcon={<FontIcon className={CSS_ICON_REMOVE} />}
                         primaryText="Remove"
                         onClick={this._onDeleteClick}
                     />
-                ];
+                );
             }
 
             return (

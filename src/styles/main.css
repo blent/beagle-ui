@@ -11,10 +11,11 @@ body {
 .card {
     margin: 2em;
     opacity: 1;
+    transition: opacity 1s ease-in-out;
 }
 
 .card-loading {
-    opacity: 0.8;
+    opacity: 0.5;
 }
 
 .form {

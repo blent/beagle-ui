@@ -17,11 +17,13 @@ export default composeClass({
         this.notifications = notifications;
 
         this.generateActions(
-          'cancel',
+            'cancel',
             'getComplete',
             'getFail',
             'saveComplete',
-            'saveFail'
+            'saveFail',
+            'deleteComplete',
+            'deleteFail'
         );
     },
 
@@ -37,6 +39,14 @@ export default composeClass({
         this.service.save(model)
         .then(onAsyncComplete(this, 'save'))
         .catch(onAsyncFail(this, 'save'));
+
+        return null;
+    },
+
+    delete(model) {
+        this.service.delete(model)
+        .then(onAsyncComplete(this, 'delete'))
+        .catch(onAsyncFail(this, 'delete'));
 
         return null;
     }

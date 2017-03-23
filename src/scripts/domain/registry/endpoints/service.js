@@ -43,7 +43,7 @@ const EndpointsService = composeClass({
     get(id) {
         return this[FIELDS.http].execute({
             method: 'GET',
-            url: `registry/endpoints/${id}`
+            url: `registry/endpoint/${id}`
         }).then((res) => {
             if (isEmpty(res.body)) {
                 return null;
@@ -72,7 +72,7 @@ const EndpointsService = composeClass({
             data: model
         }).then((res) => {
             if (isNew) {
-                return Endpoint(merge({ id: res.body }, model));
+                return Endpoint(merge({ id: parseFloat(res.text) }, model));
             }
 
             return Endpoint(merge({}, model));

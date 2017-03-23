@@ -1,6 +1,7 @@
 /* eslint-disable lodash/prefer-includes */
 import composeClass from 'compose-class';
 import { List } from 'immutable';
+import urlJoin from 'url-join';
 import DataSource from '../models/data-source';
 import QueryResult from '../models/query-result';
 import { requires } from '../../infrastructure/utils/contracts';
@@ -27,7 +28,17 @@ export default composeClass({
 
     onCreate() {
         if (this.router && this.editRoute) {
-            this.router.redirect(this.editRoute);
+            setTimeout(() => {
+                this.router.redirect(this.editRoute);
+            });
+        }
+    },
+
+    onEdit(entry) {
+        if (this.router && this.editRoute) {
+            setTimeout(() => {
+                this.router.redirect(urlJoin(this.editRoute, entry.id));
+            });
         }
     },
 

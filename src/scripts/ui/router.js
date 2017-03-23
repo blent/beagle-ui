@@ -17,6 +17,10 @@ const Router = composeClass({
         this[FIELDS.engine] = params.engine;
     },
 
+    getLocation() {
+        return this[FIELDS.engine].getCurrentLocation();
+    },
+
     navigate(path) {
         requires('path', path);
 

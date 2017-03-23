@@ -18,6 +18,7 @@ export default composeClass({
 
         this.generateActions(
             'create',
+            'edit',
             'deleteComplete',
             'deleteFail',
             'findComplete',
