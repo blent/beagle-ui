@@ -50,7 +50,7 @@ export default React.createClass({
     },
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.source !== nextProps.source) {
+        if (this.props.source.data !== nextProps.source.data) {
             const model = nextProps.source.get('data');
 
             this.setState({

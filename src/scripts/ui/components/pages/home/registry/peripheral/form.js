@@ -2,7 +2,7 @@
 import React from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import {
-    FormsyCheckbox,
+    FormsyToggle,
     FormsySelect,
     FormsyText
 } from 'formsy-material-ui/lib';
@@ -140,12 +140,13 @@ export default React.createClass({
                     fullWidth
                     required
                 />
-                <FormsyCheckbox
+                <FormsyToggle
                     className="form-control-checkbox"
                     name="enabled"
                     label="Enabled"
+                    labelPosition="right"
                     value={this.props.source.getIn(PATH_ENABLED)}
-                    defaultChecked={this.props.source.getIn(PATH_ENABLED)}
+                    defaultToggled={this.props.source.getIn(PATH_ENABLED)}
                 />
                 {this._renderPeripheralSpecificFields()}
             </Form>
