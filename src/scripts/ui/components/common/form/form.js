@@ -23,7 +23,8 @@ export default React.createClass({
         source: React.PropTypes.object,
         actions: React.PropTypes.object,
         notifications: React.PropTypes.object,
-        children: React.PropTypes.any
+        children: React.PropTypes.any,
+        onChange: React.PropTypes.func
     },
 
     mixins: [
@@ -86,6 +87,10 @@ export default React.createClass({
         this.setState({
             isDirty: isChanged
         });
+
+        if (this.props.onChange) {
+            this.props.onChange(currentValues, isChanged);
+        }
     },
 
     _isFormValid() {

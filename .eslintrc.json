@@ -23,6 +23,7 @@
     "max-len": [2, 110],
     "new-cap": 0,
     "arrow-body-style": 0,
+    "import/prefer-default-export": 0,
     "react/prefer-es6-class": 0,
     "react/jsx-filename-extension": 0,
     "react/jsx-indent": [2, 4],

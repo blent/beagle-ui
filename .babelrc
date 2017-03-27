@@ -6,6 +6,7 @@
       "react"
     ],
     "plugins": [
-        "transform-node-env-inline"
+        "transform-node-env-inline",
+        "transform-object-rest-spread"
     ]
 }

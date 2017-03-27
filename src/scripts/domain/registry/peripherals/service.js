@@ -3,7 +3,9 @@ import Symbol from 'es6-symbol';
 import get from 'lodash/get';
 import map from 'lodash/map';
 import constant from 'lodash/constant';
+import isNil from 'lodash/isNil';
 import isEmpty from 'lodash/isEmpty';
+import merge from 'lodash/merge';
 import { Map, List } from 'immutable';
 import { requires } from '../../../infrastructure/utils/contracts';
 import isImmutable from '../../../infrastructure/utils/is-immutable';
@@ -41,7 +43,7 @@ const PeripheralsService = composeClass({
     get(id) {
         return this[FIELDS.http].execute({
             method: 'GET',
-            url: `registry/peripherals/${id}`
+            url: `registry/peripheral/${id}`
         }).then((res) => {
             if (isEmpty(res.body)) {
                 return null;
@@ -51,30 +53,30 @@ const PeripheralsService = composeClass({
         });
     },
 
-    create(peripheral) {
-        if (isEmpty(peripheral) || !isImmutable(peripheral)) {
-            return Promise.reject(new Error('Invalid model'));
-        }
-
-        return this[FIELDS.http].execute({
-            method: 'POST',
-            url: 'registry/peripherals',
-            data: peripheral.toJS()
-        }).then((res) => {
-            return peripheral.set('id', res.body);
-        });
-    },
-
     save(peripheral) {
-        if (isEmpty(peripheral) || !isImmutable(peripheral)) {
+        if (isNil(peripheral)) {
             return Promise.reject(new Error('Invalid model'));
         }
 
+        let model = peripheral;
+
+        if (isImmutable(peripheral)) {
+            model = peripheral.toJS();
+        }
+
+        const isNew = !(model.id > 0);
+
         return this[FIELDS.http].execute({
-            method: 'PUT',
-            url: 'registry/peripherals',
-            data: peripheral.toJS()
-        }).then(NO_RETURN);
+            method: isNew ? 'POST' : 'PUT',
+            url: 'registry/peripheral',
+            data: model
+        }).then((res) => {
+            if (isNew) {
+                return Peripheral(merge({ id: parseFloat(res.text) }, model));
+            }
+
+            return Peripheral(merge({}, model));
+        });
     },
 
     delete(id) {

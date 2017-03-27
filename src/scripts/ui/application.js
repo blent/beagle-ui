@@ -2,6 +2,7 @@ import Alt from 'alt';
 import immutableUtil from 'alt-utils/lib/ImmutableUtil';
 import Symbol from 'es6-symbol';
 import constant from 'lodash/constant';
+import Formsy from 'formsy-react';
 import {
     namespaces,
     Container
@@ -19,6 +20,10 @@ import LoginRoute from './routes/login';
 import HomeRoute from './routes/home/index';
 import GenericListRoute from './routes/home/generic-list';
 import GenericItemRoute from './routes/home/generic-item';
+import isUUID from './validation/uuid';
+import {
+  minValue
+} from './validation/number';
 
 const FIELDS = {
     container: Symbol('container')
@@ -108,7 +113,6 @@ class Application extends Alt {
             namespaces.ui.actions('registry/peripheral'),
         ], GenericItemRoute);
 
-
         // Endpoints Registry List
         this.addActions('registry/endpoints', [
             constant('endpoints'),
@@ -139,6 +143,11 @@ class Application extends Alt {
         this.addRouteHandler('home/registry/endpoint', [
             namespaces.ui.actions('registry/endpoint'),
         ], GenericItemRoute);
+
+
+        // Validation rules
+        Formsy.addValidationRule('isUUID', isUUID);
+        Formsy.addValidationRule('minValue', minValue);
     }
 
     addActions(name, dependencies = [], constructor) {

@@ -11,6 +11,7 @@ body {
 .card {
     margin: 2em;
     opacity: 1;
+    filter: alpha(opacity=50);
     transition: opacity 1s ease-in-out;
 }
 
