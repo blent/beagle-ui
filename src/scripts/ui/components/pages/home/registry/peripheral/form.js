@@ -6,6 +6,7 @@ import {
     FormsySelect,
     FormsyText
 } from 'formsy-material-ui/lib';
+import isNil from 'lodash/isNil';
 import DataSourceMixin from '../../../../mixins/data-source-mixin';
 import kinds from '../../../../../../domain/registry/peripherals/kinds';
 import Form from '../../../../common/form/form';
@@ -18,6 +19,7 @@ const PATH_KIND = ['data', 'kind'];
 const PATH_UUID = ['data', 'uuid'];
 const PATH_MAJOR = ['data', 'major'];
 const PATH_MINOR = ['data', 'minor'];
+const PATH_ID = ['data', 'id'];
 const VALIDATION_MAJOR_MINOR = {
     minValue: 1
 };
@@ -38,6 +40,11 @@ export default React.createClass({
         };
     },
 
+    _isNew() {
+        const id = this.props.source.getIn(PATH_ID);
+        return isNil(id) || id === 0;
+    },
+
     _onChange(values) {
         if (this.state.kind !== values.kind) {
             this.setState({
@@ -51,7 +58,7 @@ export default React.createClass({
             <FormsySelect
                 name="kind"
                 floatingLabelText="Peripheral kind"
-                disabled={this.isLoading()}
+                disabled={this.isLoading() || !this._isNew()}
                 value={this.props.source.getIn(PATH_KIND)}
                 fullWidth
                 required
@@ -80,6 +87,7 @@ export default React.createClass({
                                 name="uuid"
                                 floatingLabelText="UUID"
                                 value={this.props.source.getIn(PATH_UUID)}
+                                disabled={this.isLoading() || !this._isNew()}
                                 validations="isUUID"
                                 validationError="Invalid format"
                                 required
@@ -94,6 +102,7 @@ export default React.createClass({
                             <FormsyNumber
                                 name="major"
                                 floatingLabelText="major"
+                                disabled={this.isLoading() || !this._isNew()}
                                 value={this.props.source.getIn(PATH_MAJOR)}
                                 validations={VALIDATION_MAJOR_MINOR}
                                 required
@@ -105,6 +114,7 @@ export default React.createClass({
                             <FormsyNumber
                                 name="minor"
                                 floatingLabelText="minor"
+                                disabled={this.isLoading() || !this._isNew()}
                                 value={this.props.source.getIn(PATH_MINOR)}
                                 validations={VALIDATION_MAJOR_MINOR}
                                 required
@@ -136,6 +146,7 @@ export default React.createClass({
                 <FormsyText
                     name="name"
                     floatingLabelText="Peripheral name"
+                    disabled={this.isLoading()}
                     value={this.props.source.getIn(PATH_NAME)}
                     fullWidth
                     required
@@ -145,6 +156,7 @@ export default React.createClass({
                     name="enabled"
                     label="Enabled"
                     labelPosition="right"
+                    disabled={this.isLoading()}
                     value={this.props.source.getIn(PATH_ENABLED)}
                     defaultToggled={this.props.source.getIn(PATH_ENABLED)}
                 />
