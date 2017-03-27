@@ -144,6 +144,7 @@ export default React.createClass({
                     className="form-control-checkbox"
                     name="enabled"
                     label="Enabled"
+                    value={this.props.source.getIn(PATH_ENABLED)}
                     defaultChecked={this.props.source.getIn(PATH_ENABLED)}
                 />
                 {this._renderPeripheralSpecificFields()}

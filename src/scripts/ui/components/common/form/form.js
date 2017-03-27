@@ -17,6 +17,14 @@ import DataSourceMixin from '../../mixins/data-source-mixin';
 
 const PATH_ID = ['data', 'id'];
 
+function isModelNew(model) {
+    if (!model) {
+        return true;
+    }
+
+    return !model.getIn(PATH_ID) > 0;
+}
+
 export default React.createClass({
     propTypes: {
         title: React.PropTypes.string,
@@ -39,6 +47,18 @@ export default React.createClass({
             isDirty: this._isModelNew(),
             model: model ? model.toJS() : {}
         };
+    },
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.source !== nextProps.source) {
+            const model = nextProps.source.get('data');
+
+            this.setState({
+                isDirty: isModelNew(nextProps.source),
+                canSubmit: !isModelNew(nextProps.source),
+                model: model ? model.toJS() : {}
+            });
+        }
     },
 
     _onDeleteClick() {
@@ -98,7 +118,7 @@ export default React.createClass({
     },
 
     _isModelNew() {
-        return !this.props.source.getIn(PATH_ID) > 0;
+        return isModelNew(this.props.source);
     },
 
     _isDirty() {

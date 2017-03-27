@@ -35,7 +35,7 @@ export default composeClass({
         this.setState(this.state.withMutations((state) => {
             return state
                 .set('isLoading', true)
-                .set(['data'], null);
+                .set('data', null);
         }));
 
         setTimeout(() => {
@@ -46,7 +46,9 @@ export default composeClass({
     onGet() {
         this.setState(this.state.withMutations((state) => {
             return state
-                .set('isLoading', true);
+                .set('isLoading', true)
+                .set('error', null)
+                .set('data', null);
         }));
     },
 

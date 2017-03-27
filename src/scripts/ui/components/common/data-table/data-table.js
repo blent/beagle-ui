@@ -120,7 +120,7 @@ export default React.createClass({
             const key = `${idx}_col`;
             return (
                 <TableRowColumn key={key}>
-                    {row.get(path)}
+                    <span>{row.get(path)}</span>
                 </TableRowColumn>
             );
         });

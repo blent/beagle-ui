@@ -8,7 +8,7 @@ import { requires } from '../../infrastructure/utils/contracts';
 
 const PATH_QUERY_RESULT = ['data', 'result'];
 const PATH_QUERY_RESULT_ITEMS = ['data', 'result', 'items'];
-const PATH_QUERY_RESULT_SIZE = ['data', 'result', 'items'];
+const PATH_QUERY_RESULT_SIZE = ['data', 'result', 'quantity'];
 const PATH_QUERY = ['data', 'query'];
 
 export default composeClass({
