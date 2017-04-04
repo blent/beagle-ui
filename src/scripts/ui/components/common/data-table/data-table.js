@@ -39,7 +39,7 @@ export default React.createClass({
         onNextPage: React.PropTypes.func,
         onPrevPage: React.PropTypes.func,
         onGotoPage: React.PropTypes.func,
-        isLoading: React.PropTypes.bool,
+        loading: React.PropTypes.bool,
         onRowSelection: React.PropTypes.func
     },
 
@@ -167,7 +167,7 @@ export default React.createClass({
     },
 
     _renderLoader() {
-        if (this.props.isLoading) {
+        if (this.props.loading) {
             return <Loader type="linear" />;
         }
 

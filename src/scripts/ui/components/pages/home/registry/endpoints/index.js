@@ -2,7 +2,7 @@
 import React from 'react';
 import AltContainer from 'alt-container';
 import FluxContextMixin from '../../../../mixins/flux-context-mixin';
-import List from '../../../../common/list/list';
+import ListContainer from '../../../../common/list/container';
 
 const LIST_PROPS = {
     title: 'Registered endpoints',
@@ -26,7 +26,7 @@ export default React.createClass({
                 actions={{ actions: this.getActions('registry/endpoints') }}
                 inject={LIST_PROPS}
             >
-                <List />
+                <ListContainer />
             </AltContainer>
         );
     }

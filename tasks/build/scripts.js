@@ -1,5 +1,6 @@
 /* eslint-disable global-require, import/no-extraneous-dependencies */
 import path from 'path';
+import generateName from '../../tools/generate-name';
 import postcssDefaultPlugins from '../../tools/postcss-plugins';
 
 export default function factory($, env) {
@@ -30,7 +31,7 @@ export default function factory($, env) {
                 $.util.log($.util.colors.red(err.toString()));
                 process.exit(1);
             })
-            .pipe($.vinylSourceStream('bundle.js'))
+            .pipe($.vinylSourceStream(generateName('bundle.js', env.build.debug)))
             .pipe($.vinylBuffer())
             .pipe($.if(env.build.minify, $.uglify()))
             .pipe($.gulp.dest(env.paths.output.scripts));

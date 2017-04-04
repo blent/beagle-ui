@@ -2,7 +2,7 @@
 import React from 'react';
 import AltContainer from 'alt-container';
 import FluxContextMixin from '../../../../mixins/flux-context-mixin';
-import List from '../../../../common/list/list';
+import ListContainer from '../../../../common/list/container';
 
 const LIST_PROPS = {
     title: 'Active peripherals',
@@ -27,7 +27,7 @@ export default React.createClass({
                 actions={{ actions: this.getActions('monitoring/activity') }}
                 inject={LIST_PROPS}
             >
-                <List />
+                <ListContainer />
             </AltContainer>
         );
     }

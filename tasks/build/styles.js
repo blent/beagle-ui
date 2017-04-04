@@ -1,5 +1,6 @@
 /* eslint-disable global-require, import/no-extraneous-dependencies */
 import path from 'path';
+import generateName from '../../tools/generate-name';
 import postcssDefaultPlugins from '../../tools/postcss-plugins';
 
 export default function factory($, env) {
@@ -15,7 +16,7 @@ export default function factory($, env) {
             ],
         }))
         .pipe($.if(env.build.minify, $.cssnano()))
-        .pipe($.concat('bundle.css'))
+        .pipe($.concat(generateName('bundle.css', env.build.debug)))
         .pipe($.gulp.dest(env.paths.output.styles))
         .on('error', done);
     };

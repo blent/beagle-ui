@@ -12,6 +12,7 @@ import kinds from '../../../../../../domain/registry/peripherals/kinds';
 import Form from '../../../../common/form/form';
 import FormsyNumber from '../../../../common/number/number';
 import FormsyUuid from '../../../../common/uuid/uuid';
+import Subscribers from './subscribers';
 
 const PATH_NAME = ['data', 'name'];
 const PATH_ENABLED = ['data', 'enabled'];
@@ -20,6 +21,7 @@ const PATH_UUID = ['data', 'uuid'];
 const PATH_MAJOR = ['data', 'major'];
 const PATH_MINOR = ['data', 'minor'];
 const PATH_ID = ['data', 'id'];
+const PATH_SUBSCRIBERS = ['data', 'subscribers'];
 const VALIDATION_MAJOR_MINOR = {
     minValue: 1
 };
@@ -161,6 +163,11 @@ export default React.createClass({
                     defaultToggled={this.props.source.getIn(PATH_ENABLED)}
                 />
                 {this._renderPeripheralSpecificFields()}
+                <Subscribers
+                    name="subscribers"
+                    disabled={this.isLoading()}
+                    value={this.props.source.getIn(PATH_SUBSCRIBERS)}
+                />
             </Form>
         );
     }

@@ -1,4 +1,4 @@
-/* eslint-disable react/forbid-prop-types */
+/* eslint-disable react/forbid-prop-types, react/no-unused-prop-types */
 import React from 'react';
 import {
     Card
@@ -17,16 +17,15 @@ import cn from 'classnames';
 import { List } from 'immutable';
 import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
+import isNil from 'lodash/isNil';
 import map from 'lodash/map';
-import DataSourceMixin from '../../mixins/data-source-mixin';
-import QuerySourceMixin from '../../mixins/query-source-mixin';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
+import DynamicEventsMixin from '../../mixins/dynamic-events-mixin';
 import DataTable from '../data-table/data-table';
 import {
     menuIcon as menuIconCss
 } from './list.css';
 
-const DATA_PATH = ['data', 'result', 'items'];
-const QUANTITY_PATH = ['data', 'result', 'quantity'];
 const CSS_ICON_CREATE = cn('fa', 'fa-plus', menuIconCss);
 const CSS_ICON_REMOVE = cn('fa', 'fa-minus', menuIconCss);
 const CSS_ICON_EDIT = cn('fa', 'fa-pencil-square-o', menuIconCss);
@@ -37,14 +36,27 @@ export default React.createClass({
         title: React.PropTypes.string,
         columns: React.PropTypes.array,
         editable: React.PropTypes.bool,
-        source: React.PropTypes.object,
-        actions: React.PropTypes.object
+        items: React.PropTypes.object,
+        quantity: React.PropTypes.number,
+        loading: React.PropTypes.bool,
+        onCreate: React.PropTypes.func,
+        onEdit: React.PropTypes.func,
+        onDelete: React.PropTypes.func,
+        onNextPage: React.PropTypes.func,
+        onPrevPage: React.PropTypes.func,
+        onGotoPage: React.PropTypes.func
     },
 
     mixins: [
-        DataSourceMixin,
-        QuerySourceMixin
+        DynamicEventsMixin,
+        PureRenderMixin
     ],
+
+    getDefaultProps() {
+        return {
+            quantity: 0
+        };
+    },
 
     getInitialState() {
         return {
@@ -52,16 +64,27 @@ export default React.createClass({
         };
     },
 
+    componentWillMount() {
+        this._onCreateClick = this.emit('onCreate');
+        this._onNextPageClick = this.emit('onNextPage');
+        this._onPrevPageClick = this.emit('onPrevPage');
+        this._onGotoPageClick = this.emit('onGotoPage');
+    },
+
     _onRowSelection(selected) {
         this.setState({ selected });
     },
 
-    _onCreateClick() {
-        this.props.actions.create();
-    },
-
     _onEditClick() {
-        this.props.actions.edit(this._getItems().get(this.state.selected[0]));
+        if (this.props.onEdit) {
+            const selected = this.state.selected[0];
+
+            if (isNil(selected)) {
+                return;
+            }
+
+            this.props.onEdit(selected);
+        }
     },
 
     _onDeleteClick() {
@@ -73,22 +96,18 @@ export default React.createClass({
             return;
         }
 
-        if (this.state.selected === 'all') {
-            this.props.actions.delete(this._getItems());
+        if (!this.props.onDelete) {
             return;
         }
 
-        this.props.actions.delete(List(map(this.state.selected, (idx) => {
-            return this._getItems().get(idx);
+        if (this.state.selected === 'all') {
+            this.props.onDelete(this.props.items);
+            return;
+        }
+
+        this.props.onDelete(List(map(this.state.selected, (idx) => {
+            return this.props.items.get(idx);
         })));
-    },
-
-    _getItems() {
-        return this.props.source.getIn(DATA_PATH);
-    },
-
-    _getQuantity() {
-        return this.props.source.getIn(QUANTITY_PATH);
     },
 
     _renderHeader() {
@@ -158,21 +177,24 @@ export default React.createClass({
     render() {
         const cardClassNames = cn({
             card: true,
-            'card-loading': this.isLoading()
+            'card-loading': this.props.loading
         });
 
         return (
             <Card className={cardClassNames}>
                 {this._renderHeader()}
                 <DataTable
-                    rows={this._getItems()}
-                    total={this._getQuantity()}
+                    rows={this.props.items}
+                    total={this.props.quantity}
                     columns={this.props.columns}
-                    isLoading={this.isLoading()}
+                    loading={this.props.loading}
                     clickable={this.props.editable}
                     selectable={this.props.editable}
                     multiSelectable={this.props.editable}
                     onRowSelection={this._onRowSelection}
+                    onNextPage={this._onNextPageClick}
+                    onPrevPage={this._onPrevPageClick}
+                    onGotoPage={this._onGotoPageClick}
                 />
             </Card>
         );
