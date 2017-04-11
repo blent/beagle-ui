@@ -12,82 +12,100 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Formsy from 'formsy-react';
 import cn from 'classnames';
 import merge from 'lodash/merge';
+import isNumber from 'lodash/isNumber';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import Loader from '../../common/loader/loader';
-import DataSourceMixin from '../../mixins/data-source-mixin';
-
-const PATH_ID = ['data', 'id'];
 
 function isModelNew(model) {
     if (!model) {
         return true;
     }
 
-    return !model.getIn(PATH_ID) > 0;
+    return !isNumber(model.id) || model.id <= 0;
 }
 
 export default React.createClass({
     propTypes: {
         title: React.PropTypes.string,
-        source: React.PropTypes.object,
-        actions: React.PropTypes.object,
-        notifications: React.PropTypes.object,
-        children: React.PropTypes.any,
-        onChange: React.PropTypes.func
+        model: React.PropTypes.object,
+        loading: React.PropTypes.bool,
+        onSave: React.PropTypes.func,
+        onDelete: React.PropTypes.func,
+        onCancel: React.PropTypes.func,
+        onChange: React.PropTypes.func,
+        onNotification: React.PropTypes.func,
+        children: React.PropTypes.any
     },
 
     mixins: [
-        DataSourceMixin
+        PureRenderMixin
     ],
 
     getInitialState() {
-        const model = this.getData();
-
         return {
             canSubmit: !this._isModelNew(),
             isDirty: this._isModelNew(),
-            model: model ? model.toJS() : {}
+            model: this.props.model || {}
         };
     },
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.source.data !== nextProps.source.data) {
-            const model = nextProps.source.get('data');
-
+        if (this.props.model !== nextProps.model) {
             this.setState({
-                isDirty: isModelNew(nextProps.source),
-                canSubmit: !isModelNew(nextProps.source),
-                model: model ? model.toJS() : {}
+                isDirty: isModelNew(nextProps.model),
+                canSubmit: !isModelNew(nextProps.model),
+                model: nextProps.model || {}
             });
         }
     },
 
+    _isLoading() {
+        return this.props.loading === true;
+    },
+
     _onDeleteClick() {
-        if (!this.isLoading()) {
-            this.props.actions.delete(this.props.source.get('data'));
+        if (!this.props.onDelete) {
+            return;
+        }
+
+        if (!this._isLoading()) {
+            this.props.onDelete(this.props.model);
         }
     },
 
     _onCancelClick() {
-        if (!this.isLoading()) {
-            this.props.actions.cancel();
+        if (!this.props.onCancel) {
+            return;
+        }
+
+        if (!this._isLoading()) {
+            this.props.onCancel();
         }
     },
 
     _onValidSubmit(model) {
-        if (!this.isLoading()) {
+        if (!this.props.onSave) {
+            return;
+        }
+
+        if (!this._isLoading()) {
             if (this._isModelNew()) {
-                this.props.actions.save(model);
+                this.props.onSave(model);
             } else {
-                this.props.actions.save(merge({
-                    id: this.props.source.getIn(PATH_ID)
+                this.props.onSave(merge({
+                    id: this.props.model.id
                 }, model));
             }
         }
     },
 
     _onInvalidSubmit(errors) {
-        if (!this.isLoading()) {
-            this.props.notifications.error('Form is invalid', errors);
+        if (!this.props.onNotification) {
+            return;
+        }
+
+        if (!this._isLoading()) {
+            this.props.onNotification('error', 'Form is invalid', errors);
         }
     },
 
@@ -118,7 +136,7 @@ export default React.createClass({
     },
 
     _isModelNew() {
-        return isModelNew(this.props.source);
+        return isModelNew(this.props.model);
     },
 
     _isDirty() {
@@ -132,7 +150,7 @@ export default React.createClass({
                 label="Save"
                 type="submit"
                 primary
-                disabled={this.isLoading() || !this._isFormValid() || !this._isDirty()}
+                disabled={this._isLoading() || !this._isFormValid() || !this._isDirty()}
             />
         ];
 
@@ -141,7 +159,7 @@ export default React.createClass({
                 <RaisedButton
                     key="delete"
                     label="Delete"
-                    disabled={this.isLoading()}
+                    disabled={this._isLoading()}
                     onClick={this._onDeleteClick}
                     secondary
                 />
@@ -152,7 +170,7 @@ export default React.createClass({
             <RaisedButton
                 key="cancel"
                 label="Cancel"
-                disabled={this.isLoading()}
+                disabled={this._isLoading()}
                 onClick={this._onCancelClick}
             />
         );
@@ -161,7 +179,7 @@ export default React.createClass({
     },
 
     _renderLoader() {
-        if (this.isLoading()) {
+        if (this._isLoading()) {
             return <Loader type="linear" />;
         }
 
@@ -171,7 +189,7 @@ export default React.createClass({
     render() {
         const cardClassNames = cn({
             card: true,
-            'card-loading': this.isLoading()
+            'card-loading': this._isLoading()
         });
         return (
             <Card className={cardClassNames}>
