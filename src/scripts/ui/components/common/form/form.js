@@ -3,19 +3,13 @@ import React from 'react';
 import {
     Card
 } from 'material-ui/Card';
-import {
-  Toolbar,
-  ToolbarGroup,
-  ToolbarTitle
-} from 'material-ui/Toolbar';
-import RaisedButton from 'material-ui/RaisedButton';
 import Formsy from 'formsy-react';
 import cn from 'classnames';
 import merge from 'lodash/merge';
 import isNumber from 'lodash/isNumber';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import map from 'lodash/map';
-import Loader from '../../common/loader/loader';
+import FormCard from './card';
 import {
     card as cardCss
 } from './form.css';
@@ -149,76 +143,21 @@ export default React.createClass({
         return this.state.isDirty;
     },
 
-    _renderButtons() {
-        const buttons = [
-            <RaisedButton
-                key="save"
-                label="Save"
-                type="submit"
-                primary
-                disabled={this._isLoading() || !this._isFormValid() || !this._isDirty()}
-            />
-        ];
-
-        if (!this._isModelNew()) {
-            buttons.push(
-                <RaisedButton
-                    key="delete"
-                    label="Delete"
-                    disabled={this._isLoading()}
-                    onClick={this._onDeleteClick}
-                    secondary
-                />
-            );
-        }
-
-        buttons.push(
-            <RaisedButton
-                key="cancel"
-                label="Cancel"
-                disabled={this._isLoading()}
-                onClick={this._onCancelClick}
-            />
-        );
-
-        return buttons;
-    },
-
-    _renderLoader() {
-        if (this._isLoading()) {
-            return <Loader type="linear" />;
-        }
-
-        return null;
-    },
-
-    _renderToolbar() {
-        return (
-            <Toolbar>
-                <ToolbarGroup>
-                    <ToolbarTitle text={this.props.title} />
-                </ToolbarGroup>
-                <ToolbarGroup>
-                    {this._renderButtons()}
-                </ToolbarGroup>
-            </Toolbar>
-        );
-    },
-
     _renderMainCard(children, className) {
         return (
-            <Card
+            <FormCard
                 key="main"
                 className={className}
+                title={this.props.title}
+                loading={this._isLoading()}
+                hideDelete={this._isModelNew()}
+                disableSave={!this._isFormValid() || !this._isDirty()}
+                onDeleteClick={this._onDeleteClick}
+                onCancelClick={this._onCancelClick}
+                submit
             >
-                {this._renderToolbar()}
-                {this._renderLoader()}
-                <div
-                    className={className}
-                >
-                    {children}
-                </div>
-            </Card>
+                {children}
+            </FormCard>
         );
     },
 
@@ -245,7 +184,7 @@ export default React.createClass({
         });
 
         if (!this.props.useGroups) {
-            return this._renderMainCard(this.props.children, cardClassNames);
+            return this._renderMainCard(this.props.children);
         }
 
         const groups = [];

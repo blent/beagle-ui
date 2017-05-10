@@ -167,11 +167,12 @@ export default React.createClass({
     },
 
     _renderLoader() {
-        if (this.props.loading) {
-            return <Loader type="linear" />;
-        }
-
-        return null;
+        return (
+            <Loader
+                type="linear"
+                hidden={!this.props.loading}
+            />
+        );
     },
 
     render() {
