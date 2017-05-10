@@ -14,7 +14,11 @@ import cn from 'classnames';
 import merge from 'lodash/merge';
 import isNumber from 'lodash/isNumber';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
+import map from 'lodash/map';
 import Loader from '../../common/loader/loader';
+import {
+    card as cardCss
+} from './form.css';
 
 function isModelNew(model) {
     if (!model) {
@@ -34,6 +38,8 @@ export default React.createClass({
         onCancel: React.PropTypes.func,
         onChange: React.PropTypes.func,
         onNotification: React.PropTypes.func,
+        useGroups: React.PropTypes.bool,
+        useCardForSubGroups: React.PropTypes.bool,
         children: React.PropTypes.any
     },
 
@@ -186,37 +192,110 @@ export default React.createClass({
         return null;
     },
 
-    render() {
+    _renderToolbar() {
+        return (
+            <Toolbar>
+                <ToolbarGroup>
+                    <ToolbarTitle text={this.props.title} />
+                </ToolbarGroup>
+                <ToolbarGroup>
+                    {this._renderButtons()}
+                </ToolbarGroup>
+            </Toolbar>
+        );
+    },
+
+    _renderMainCard(children, className) {
+        return (
+            <Card
+                key="main"
+                className={className}
+            >
+                {this._renderToolbar()}
+                {this._renderLoader()}
+                <div
+                    className={className}
+                >
+                    {children}
+                </div>
+            </Card>
+        );
+    },
+
+    _renderAdditionalCard(children, className, index) {
+        return (
+            <Card
+                key={`additional-${index}`}
+                className={className}
+            >
+                <div
+                    className={className}
+                >
+                    {children}
+                </div>
+            </Card>
+        );
+    },
+
+    _renderChildren() {
         const cardClassNames = cn({
             card: true,
+            [cardCss]: true,
             'card-loading': this._isLoading()
         });
+
+        if (!this.props.useGroups) {
+            return this._renderMainCard(this.props.children, cardClassNames);
+        }
+
+        const groups = [];
+
+        React.Children.forEach(this.props.children, (child) => {
+            if (!child) {
+                return;
+            }
+
+            let groupName = parseFloat(child.props.group || '1') - 1;
+
+            if (groupName < 0) {
+                groupName = 0;
+            }
+
+            let group = groups[groupName];
+
+            if (!group) {
+                group = [];
+                groups.push(group);
+            }
+
+            group.push(child);
+        });
+
+        return map(groups, (group, index) => {
+            if (index === 0) {
+                return this._renderMainCard(group, cardClassNames);
+            }
+
+            if (!this.props.useCardForSubGroups) {
+                return <div>{group}</div>;
+            }
+
+            return this._renderAdditionalCard(group, cardClassNames, index);
+        });
+    },
+
+    render() {
         return (
-            <Card className={cardClassNames}>
-                <Formsy.Form
-                    className="form"
-                    onValid={this._onValid}
-                    onInvalid={this._onInvalid}
-                    onValidSubmit={this._onValidSubmit}
-                    onInvalidSubmit={this._onInvalidSubmit}
-                    onChange={this._onChange}
-                >
-                    <Toolbar>
-                        <ToolbarGroup>
-                            <ToolbarTitle text={this.props.title} />
-                        </ToolbarGroup>
-                        <ToolbarGroup>
-                            {this._renderButtons()}
-                        </ToolbarGroup>
-                    </Toolbar>
-                    {this._renderLoader()}
-                    <div
-                        className={cardClassNames}
-                    >
-                        {this.props.children}
-                    </div>
-                </Formsy.Form>
-            </Card>
+            <Formsy.Form
+                className="form"
+                onValid={this._onValid}
+                onInvalid={this._onInvalid}
+                onValidSubmit={this._onValidSubmit}
+                onInvalidSubmit={this._onInvalidSubmit}
+                onChange={this._onChange}
+            >
+                {this._renderChildren()}
+            </Formsy.Form>
         );
     }
 });

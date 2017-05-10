@@ -19,10 +19,6 @@ body {
     opacity: 0.5;
 }
 
-.form {
-    padding-bottom: 24px;
-}
-
 .form-control {
     width: 100% !important;
 }

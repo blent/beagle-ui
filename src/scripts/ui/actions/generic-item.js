@@ -17,6 +17,7 @@ export default composeClass({
         this.notifications = notifications;
 
         this.generateActions(
+            'create',
             'cancel',
             'getComplete',
             'getFail',

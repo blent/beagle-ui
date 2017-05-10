@@ -13,7 +13,8 @@ const MODES = (new (Record({
 
 export default React.createClass({
     propTypes: {
-        value: React.PropTypes.object
+        value: React.PropTypes.object,
+        loading: React.PropTypes.bool
     },
 
     mixins: [
@@ -30,6 +31,16 @@ export default React.createClass({
         };
     },
 
+    _onCreate() {
+        const value = this.getValue();
+
+        this.setState({
+            mode: MODES.FORM,
+            item: {},
+            itemIndex: value ? value.size : 0
+        });
+    },
+
     // _onFormSave(newValues) {
     //
     // },
@@ -44,12 +55,16 @@ export default React.createClass({
 
     _renderList() {
         const value = this.getValue();
-        const quantity = value ? value.size() : 0;
+        const quantity = value ? value.size : 0;
 
         return (
             <List
+                title="Subscribers"
                 items={this.getValue()}
+                editable
+                loading={this.props.loading}
                 quantity={quantity}
+                onCreate={this._onCreate}
             />
         );
     },
@@ -58,6 +73,7 @@ export default React.createClass({
         return (
             <Form
                 item={this.state.item}
+                loading={this.props.loading}
                 onSave={this._onFormSave}
                 onCancel={this._onFormCancel}
                 onDelete={this._onFormDelete}

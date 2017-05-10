@@ -8,8 +8,8 @@ import {
 } from 'formsy-material-ui/lib';
 import isNil from 'lodash/isNil';
 import DataSourceMixin from '../../../../mixins/data-source-mixin';
-import kinds from '../../../../../../domain/registry/peripherals/kinds';
-import Form from '../../../../common/form/form';
+import KINDS from '../../../../../../domain/registry/peripherals/kinds';
+import FormContainer from '../../../../common/form/container';
 import FormsyNumber from '../../../../common/number/number';
 import FormsyUuid from '../../../../common/uuid/uuid';
 import Subscribers from './subscribers';
@@ -25,6 +25,17 @@ const PATH_SUBSCRIBERS = ['data', 'subscribers'];
 const VALIDATION_MAJOR_MINOR = {
     minValue: 1
 };
+
+const KIND_OPTIONS = KINDS.toSeq().map((value, key) => {
+    const itemKey = key;
+    return (
+        <MenuItem
+            key={itemKey}
+            value={value}
+            primaryText={value}
+        />
+    );
+}).toArray();
 
 export default React.createClass({
     propTypes: {
@@ -58,6 +69,7 @@ export default React.createClass({
     _renderKindDropdown() {
         return (
             <FormsySelect
+                group="1"
                 name="kind"
                 floatingLabelText="Peripheral kind"
                 disabled={this.isLoading() || !this._isNew()}
@@ -65,16 +77,7 @@ export default React.createClass({
                 fullWidth
                 required
             >
-                {kinds.toSeq().map((value, key) => {
-                    const itemKey = key;
-                    return (
-                        <MenuItem
-                            key={itemKey}
-                            value={value}
-                            primaryText={value}
-                        />
-                    );
-                }).toArray()}
+                {KIND_OPTIONS}
             </FormsySelect>
         );
     },
@@ -86,6 +89,7 @@ export default React.createClass({
                     <div className="col-xs">
                         <div className="box">
                             <FormsyUuid
+                                group="1"
                                 name="uuid"
                                 floatingLabelText="UUID"
                                 value={this.props.source.getIn(PATH_UUID)}
@@ -102,6 +106,7 @@ export default React.createClass({
                     <div className="col-xs">
                         <div className="box">
                             <FormsyNumber
+                                group="1"
                                 name="major"
                                 floatingLabelText="major"
                                 disabled={this.isLoading() || !this._isNew()}
@@ -114,6 +119,7 @@ export default React.createClass({
                     <div className="col-xs">
                         <div className="box">
                             <FormsyNumber
+                                group="1"
                                 name="minor"
                                 floatingLabelText="minor"
                                 disabled={this.isLoading() || !this._isNew()}
@@ -138,14 +144,16 @@ export default React.createClass({
 
     render() {
         return (
-            <Form
+            <FormContainer
                 title={'Peripheral'}
                 actions={this.props.actions}
                 source={this.props.source}
                 onChange={this._onChange}
+                useGroups
             >
                 {this._renderKindDropdown()}
                 <FormsyText
+                    group="1"
                     name="name"
                     floatingLabelText="Peripheral name"
                     disabled={this.isLoading()}
@@ -153,7 +161,9 @@ export default React.createClass({
                     fullWidth
                     required
                 />
+                {this._renderPeripheralSpecificFields()}
                 <FormsyToggle
+                    group="1"
                     className="form-control-checkbox"
                     name="enabled"
                     label="Enabled"
@@ -162,13 +172,14 @@ export default React.createClass({
                     value={this.props.source.getIn(PATH_ENABLED)}
                     defaultToggled={this.props.source.getIn(PATH_ENABLED)}
                 />
-                {this._renderPeripheralSpecificFields()}
                 <Subscribers
+                    group="2"
                     name="subscribers"
                     disabled={this.isLoading()}
+                    loading={this.isLoading()}
                     value={this.props.source.getIn(PATH_SUBSCRIBERS)}
                 />
-            </Form>
+            </FormContainer>
         );
     }
 });

@@ -7,7 +7,7 @@ import {
 } from 'formsy-material-ui/lib';
 import DataSourceMixin from '../../../../mixins/data-source-mixin';
 import httpMethods from '../../../../../../domain/registry/endpoints/methods';
-import Form from '../../../../common/form/form';
+import FormContainer from '../../../../common/form/container';
 
 const PATH_NAME = ['data', 'name'];
 const PATH_URL = ['data', 'url'];
@@ -49,7 +49,7 @@ export default React.createClass({
 
     render() {
         return (
-            <Form
+            <FormContainer
                 title={'Endpoint'}
                 actions={this.props.actions}
                 source={this.props.source}
@@ -69,7 +69,7 @@ export default React.createClass({
                     required
                 />
                 {this._renderHttpMethodsDropdown()}
-            </Form>
+            </FormContainer>
         );
     }
 });

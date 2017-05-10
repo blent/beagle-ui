@@ -10,6 +10,8 @@ export default React.createClass({
         source: React.PropTypes.object,
         actions: React.PropTypes.object,
         notifications: React.PropTypes.object,
+        useGroups: React.PropTypes.bool,
+        useCardForSubGroups: React.PropTypes.bool,
         children: React.PropTypes.any,
         onChange: React.PropTypes.func
     },
@@ -58,6 +60,8 @@ export default React.createClass({
                 onCancel={this._onCancel}
                 onChange={this._onChange}
                 onNotification={this._onNotification}
+                useGroups={this.props.useGroups}
+                useCardForSubGroups={this.props.useCardForSubGroups}
             >
                 {this.props.children}
             </Form>

@@ -31,6 +31,15 @@ export default composeClass({
         return !(id > 0);
     },
 
+    onCreate() {
+        this.setState(this.state.withMutations((state) => {
+            return state
+              .set('isLoading', false)
+              .set('error', null)
+              .set('data', null);
+        }));
+    },
+
     onCancel() {
         this.setState(this.state.withMutations((state) => {
             return state

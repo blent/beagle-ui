@@ -1,4 +1,7 @@
-import { Record } from 'immutable';
+import { Record, List } from 'immutable';
+import merge from 'lodash/merge';
+import map from 'lodash/map';
+import Subscriber from './subscriber';
 
 const IBeaconPeripheral = Record({
     id: 0,
@@ -12,5 +15,7 @@ const IBeaconPeripheral = Record({
 }, 'IBeaconPeripheral');
 
 export default function create(values) {
-    return new IBeaconPeripheral(values);
+    return new IBeaconPeripheral(merge(values, {
+        subscribers: List(map(values.subscribers, Subscriber))
+    }));
 }
