@@ -143,11 +143,10 @@ export default React.createClass({
         return this.state.isDirty;
     },
 
-    _renderMainCard(children, className) {
+    _renderMainCard(children) {
         return (
             <FormCard
                 key="main"
-                className={className}
                 title={this.props.title}
                 loading={this._isLoading()}
                 hideDelete={this._isModelNew()}
