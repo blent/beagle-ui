@@ -14,7 +14,9 @@ const MODES = (new (Record({
 export default React.createClass({
     propTypes: {
         value: React.PropTypes.object,
-        loading: React.PropTypes.bool
+        loading: React.PropTypes.bool,
+        endpoints: React.PropTypes.object,
+        endpointsActions: React.PropTypes.object
     },
 
     mixins: [
@@ -42,7 +44,11 @@ export default React.createClass({
     },
 
     // _onFormSave(newValues) {
+    //     let value = this.state.value;
     //
+    //     if (value == null) {
+    //
+    //     }
     // },
     //
     // _onFormDelete() {
@@ -73,6 +79,8 @@ export default React.createClass({
         return (
             <Form
                 item={this.state.item}
+                endpoints={this.props.endpoints}
+                endpointsActions={this.props.endpointsActions}
                 loading={this.props.loading}
                 onSave={this._onFormSave}
                 onCancel={this._onFormCancel}

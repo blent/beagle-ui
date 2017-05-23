@@ -8,16 +8,24 @@ import Toggle from 'material-ui/Toggle';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import merge from 'lodash/merge';
 import trim from 'lodash/trim';
+import get from 'lodash/get';
 import ValidationState from '../../../../../validation/state/state';
 import EVENTS from '../../../../../../domain/registry/peripherals/events';
 import FormCard from '../../../../common/form/card';
+import AutoComplete from '../../../../common/autocomplete/container';
 
 const PATH_VALIDATION_NAME = ['fields', 'name'];
 const PATH_VALIDATION_NAME_ISVALID = PATH_VALIDATION_NAME.concat(['isValid']);
 const PATH_VALIDATION_NAME_MESSAGE = PATH_VALIDATION_NAME.concat(['message']);
+
 const PATH_VALIDATION_EVENT = ['fields', 'event'];
 const PATH_VALIDATION_EVENT_ISVALID = PATH_VALIDATION_EVENT.concat(['isValid']);
 const PATH_VALIDATION_EVENT_MESSAGE = PATH_VALIDATION_EVENT.concat(['message']);
+
+const PATH_VALIDATION_ENDPOINT = ['fields', 'endpoint'];
+const PATH_VALIDATION_ENDPOINT_ISVALID = PATH_VALIDATION_ENDPOINT.concat(['isValid']);
+const PATH_VALIDATION_ENDPOINT_MESSAGE = PATH_VALIDATION_ENDPOINT.concat(['message']);
+
 const VALIDATION_PATHS = {
     name: {
         isValid: PATH_VALIDATION_NAME_ISVALID,
@@ -26,6 +34,10 @@ const VALIDATION_PATHS = {
     event: {
         isValid: PATH_VALIDATION_EVENT_ISVALID,
         message: PATH_VALIDATION_EVENT_MESSAGE
+    },
+    endpoint: {
+        isValid: PATH_VALIDATION_ENDPOINT_ISVALID,
+        message: PATH_VALIDATION_ENDPOINT_MESSAGE
     }
 };
 
@@ -39,6 +51,8 @@ const EVENT_OPTONS = EVENTS.toSeq().map((value, key) => {
         />
     );
 }).toArray();
+
+const ENDPOINT_DATA_SOURCE_CONFIG = { text: 'name', value: 'id' };
 
 function isNewItem(item) {
     if (item == null) {
@@ -58,6 +72,8 @@ function areAllValid(validation) {
 export default React.createClass({
     propTypes: {
         item: React.PropTypes.object,
+        endpoints: React.PropTypes.object,
+        endpointsActions: React.PropTypes.object,
         loading: React.PropTypes.bool,
         onSave: React.PropTypes.func,
         onDelete: React.PropTypes.func,
@@ -71,7 +87,8 @@ export default React.createClass({
     getDefaultProps() {
         return {
             loading: false,
-            item: {}
+            item: {},
+            endpoints: []
         };
     },
 
@@ -88,6 +105,10 @@ export default React.createClass({
                         message: null
                     },
                     event: {
+                        isValid: !isNew,
+                        message: null
+                    },
+                    endpoint: {
                         isValid: !isNew,
                         message: null
                     }
@@ -138,6 +159,13 @@ export default React.createClass({
         this._setItemValue('enabled', value);
     },
 
+    _onEndpointSelect(chosenEndpoint) {
+        this._setItemValue('endpoint', chosenEndpoint, {
+            isValid: true,
+            message: null
+        });
+    },
+
     _setItemValue(key, value, fieldValidation) {
         let validation = this.state.validation;
 
@@ -169,6 +197,12 @@ export default React.createClass({
         });
     },
 
+    _onSave() {
+        if (this.state.validation.isValid === true) {
+            this.props.onSave(this.state.item);
+        }
+    },
+
     render() {
         return (
             <FormCard
@@ -176,7 +210,7 @@ export default React.createClass({
                 loading={this.props.loading}
                 hideDelete={this._isNew()}
                 disableSave={!this._isFormValid() || !this._isDirty()}
-                onSaveClick={this.props.onSave}
+                onSaveClick={this._onSave}
                 onDeleteClick={this.props.onDelete}
                 onCancelClick={this.props.onCancel}
             >
@@ -188,7 +222,6 @@ export default React.createClass({
                     errorText={this.state.validation.getIn(PATH_VALIDATION_NAME_MESSAGE)}
                     onChange={this._onNameChange}
                     fullWidth
-                    required
                 />
                 <SelectField
                     name="event"
@@ -198,10 +231,21 @@ export default React.createClass({
                     errorText={this.state.validation.getIn(PATH_VALIDATION_EVENT_MESSAGE)}
                     onChange={this._onEventChange}
                     fullWidth
-                    required
                 >
                     {EVENT_OPTONS}
                 </SelectField>
+                <AutoComplete
+                    name="endpoint"
+                    label="Endpoint"
+                    disabled={this.props.loading || !this._isNew()}
+                    searchText={get(this.state.item, 'endpoint.name')}
+                    searchParam="name"
+                    shape={ENDPOINT_DATA_SOURCE_CONFIG}
+                    source={this.props.endpoints}
+                    actions={this.props.endpointsActions}
+                    onSelect={this._onEndpointSelect}
+                    fullWidth
+                />
                 <Toggle
                     className="form-control-checkbox"
                     name="enabled"

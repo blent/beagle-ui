@@ -5,9 +5,9 @@ export default function factory($, env) {
         return $.gulp
             .src(path.join(env.paths.tests, '/unit/**/*.js'), { read: false })
             .pipe($.mocha({
+                compilers: 'js:babel-register',
                 reporter: env.test.report || 'spec',
-                recursive: true,
-                port: env.test.port
+                recursive: true
             }));
     };
 }

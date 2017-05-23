@@ -1,20 +1,12 @@
-import isFunction from 'lodash/isFunction';
-
-function assertDataSourceMixin() {
-    if (!isFunction(this.getData)) {
-        throw new Error('Query mixin requires Data Source mixin');
-    }
-}
+const PATH_QUERY_QUERY = ['data', 'query'];
+const PATH_QUERY_RESULT = ['data', 'result'];
 
 export default {
-    getQuery() {
-        assertDataSourceMixin();
-        return this.props.source.get('data');
+    getQueryParams() {
+        return this.props.source.getIn(PATH_QUERY_QUERY);
     },
 
     getQueryResult() {
-        assertDataSourceMixin();
-
-        return this.props.source.get('data');
+        return this.props.source.getIn(PATH_QUERY_RESULT);
     }
 };

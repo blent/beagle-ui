@@ -30,7 +30,8 @@ const EndpointsService = composeClass({
             url: 'registry/endpoints',
             params: {
                 take: get(query, 'take', 10),
-                skip: get(query, 'skip', 0)
+                skip: get(query, 'skip', 0),
+                name: get(query, 'name')
             }
         }).then((res) => {
             return Map({

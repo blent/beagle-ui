@@ -215,7 +215,13 @@ export default React.createClass({
             }
 
             if (!this.props.useCardForSubGroups) {
-                return <div>{group}</div>;
+                return (
+                    <div
+                        key={`group_${index}`}
+                    >
+                        {group}
+                    </div>
+                );
             }
 
             return this._renderAdditionalCard(group, cardClassNames, index);

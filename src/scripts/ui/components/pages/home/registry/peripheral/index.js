@@ -12,8 +12,14 @@ export default React.createClass({
     render() {
         return (
             <AltContainer
-                stores={{ source: this.getStore('registry/peripheral') }}
-                actions={{ actions: this.getActions('registry/peripheral') }}
+                stores={{
+                    source: this.getStore('registry/peripheral'),
+                    endpoints: this.getStore('registry/endpoints')
+                }}
+                actions={{
+                    actions: this.getActions('registry/peripheral'),
+                    endpointsActions: this.getActions('registry/endpoints')
+                }}
             >
                 <Form />
             </AltContainer>

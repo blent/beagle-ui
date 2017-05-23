@@ -8,8 +8,6 @@ import { requires } from '../../infrastructure/utils/contracts';
 
 const PATH_QUERY_RESULT = ['data', 'result'];
 const PATH_QUERY_RESULT_ITEMS = ['data', 'result', 'items'];
-const PATH_QUERY_RESULT_SIZE = ['data', 'result', 'quantity'];
-const PATH_QUERY = ['data', 'query'];
 
 export default composeClass({
     constructor(actions, router, editRoute) {
@@ -72,12 +70,10 @@ export default composeClass({
     },
 
     onFind(query) {
-        this.setState(this.state.withMutations((state) => {
-            return state
-                .set('isLoading', true)
-                .setIn(PATH_QUERY, query)
-                .setIn(PATH_QUERY_RESULT_SIZE, 0)
-                .setIn(PATH_QUERY_RESULT_ITEMS, List());
+        this.setState(this.state.merge({
+            isLoading: true,
+            error: null,
+            data: QueryResult(query, List())
         }));
     },
 

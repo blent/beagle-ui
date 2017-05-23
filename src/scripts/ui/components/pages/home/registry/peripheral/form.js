@@ -22,6 +22,7 @@ const PATH_MAJOR = ['data', 'major'];
 const PATH_MINOR = ['data', 'minor'];
 const PATH_ID = ['data', 'id'];
 const PATH_SUBSCRIBERS = ['data', 'subscribers'];
+
 const VALIDATION_MAJOR_MINOR = {
     minValue: 1
 };
@@ -40,7 +41,9 @@ const KIND_OPTIONS = KINDS.toSeq().map((value, key) => {
 export default React.createClass({
     propTypes: {
         source: React.PropTypes.object,
-        actions: React.PropTypes.object
+        endpoints: React.PropTypes.object,
+        actions: React.PropTypes.object,
+        endpointsActions: React.PropTypes.object
     },
 
     mixins: [
@@ -142,6 +145,10 @@ export default React.createClass({
         return null;
     },
 
+    _onEndpointSearch(text) {
+        this.props.endpointsActions.find({ name: `${text}*`, take: 5 });
+    },
+
     render() {
         return (
             <FormContainer
@@ -178,6 +185,8 @@ export default React.createClass({
                     disabled={this.isLoading()}
                     loading={this.isLoading()}
                     value={this.props.source.getIn(PATH_SUBSCRIBERS)}
+                    endpoints={this.props.endpoints}
+                    endpointsActions={this.props.endpointsActions}
                 />
             </FormContainer>
         );
