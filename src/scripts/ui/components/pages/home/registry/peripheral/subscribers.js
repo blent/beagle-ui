@@ -2,14 +2,28 @@
 import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import Formsy from 'formsy-react';
-import { Record } from 'immutable';
-import List from '../../../../common/list/list';
+import { Record, List } from 'immutable';
+import Subscriber from '../../../../../../domain/registry/peripherals/subscriber';
+import DataList from '../../../../common/list/list';
 import Form from './subscriber';
 
 const MODES = (new (Record({
     LIST: 'list',
     FORM: 'form'
 }))());
+
+const DATA_LIST_COLUMNS = [
+    'name',
+    'event',
+    'endpoint',
+    'enabled'
+];
+
+function updateList(list, item, values, position = 0) {
+    const subscriber = item == null ? Subscriber(values) : item.merge(values);
+
+    return list == null ? List([subscriber]) : list.set(position, subscriber);
+}
 
 export default React.createClass({
     propTypes: {
@@ -38,35 +52,43 @@ export default React.createClass({
 
         this.setState({
             mode: MODES.FORM,
-            item: {},
+            item: Subscriber(),
             itemIndex: value ? value.size : 0
         });
     },
 
-    // _onFormSave(newValues) {
-    //     let value = this.state.value;
-    //
-    //     if (value == null) {
-    //
-    //     }
-    // },
+    _onFormSave(values) {
+        this.setState({
+            mode: MODES.LIST,
+            item: null,
+            itemIndex: null
+        });
+
+        this.setValue(updateList(this.getValue(), this.state.item, values, this.state.itemIndex));
+    },
     //
     // _onFormDelete() {
     //
     // },
     //
-    // _onFormCancel() {
-    //
-    // },
+
+    _onFormCancel() {
+        this.setState({
+            mode: MODES.LIST,
+            item: null,
+            itemIndex: null
+        });
+    },
 
     _renderList() {
         const value = this.getValue();
         const quantity = value ? value.size : 0;
 
         return (
-            <List
+            <DataList
                 title="Subscribers"
                 items={this.getValue()}
+                columns={DATA_LIST_COLUMNS}
                 editable
                 loading={this.props.loading}
                 quantity={quantity}

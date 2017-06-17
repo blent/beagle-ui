@@ -18,6 +18,8 @@ export default React.createClass({
         fullWidth: React.PropTypes.bool,
         searchText: React.PropTypes.string,
         searchParam: React.PropTypes.string,
+        anchorOrigin: React.PropTypes.object,
+        targetOrigin: React.PropTypes.object,
         onSelect: React.PropTypes.func
     },
 
@@ -72,6 +74,8 @@ export default React.createClass({
                 onSelect={this._onSelect}
                 onSearch={this._onSearch}
                 fullWidth={this.props.fullWidth}
+                anchorOrigin={this.props.anchorOrigin}
+                targetOrigin={this.props.targetOrigin}
             />
         );
     }

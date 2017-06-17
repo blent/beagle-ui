@@ -9,7 +9,7 @@ const Subscriber = Record({
     endpoint: null
 });
 
-export default function create(values) {
+export default function create(values = {}) {
     return new Subscriber({
         id: values.id,
         name: values.name,

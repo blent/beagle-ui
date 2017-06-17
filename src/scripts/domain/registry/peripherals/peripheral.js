@@ -14,8 +14,12 @@ const IBeaconPeripheral = Record({
     subscribers: null
 }, 'IBeaconPeripheral');
 
-export default function create(values) {
+export default function create(values = {}) {
+    const subscribers = List.isList(values.subscribers) === true ?
+        values.subscribers :
+        List(map(values.subscribers, Subscriber));
+
     return new IBeaconPeripheral(merge(values, {
-        subscribers: List(map(values.subscribers, Subscriber))
+        subscribers
     }));
 }

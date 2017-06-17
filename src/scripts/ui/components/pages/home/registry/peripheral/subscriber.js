@@ -26,6 +26,9 @@ const PATH_VALIDATION_ENDPOINT = ['fields', 'endpoint'];
 const PATH_VALIDATION_ENDPOINT_ISVALID = PATH_VALIDATION_ENDPOINT.concat(['isValid']);
 const PATH_VALIDATION_ENDPOINT_MESSAGE = PATH_VALIDATION_ENDPOINT.concat(['message']);
 
+// const AUTOCOMPLETE_ANCHOR_ORIGIN = { vertical: 'top', horizontal: 'left' };
+// const AUTOCOMPLETE_TARGET_ORIGIN = { vertical: 'bottom', horizontal: 'left' };
+
 const VALIDATION_PATHS = {
     name: {
         isValid: PATH_VALIDATION_NAME_ISVALID,
@@ -94,8 +97,9 @@ export default React.createClass({
 
     getInitialState() {
         const isNew = isNewItem(this.props.item);
+
         return {
-            item: this.props.item,
+            item: this.props.item.toJS(),
             isDirty: false,
             validation: ValidationState({
                 isValid: !isNew,

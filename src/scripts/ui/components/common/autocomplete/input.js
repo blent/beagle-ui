@@ -13,6 +13,8 @@ export default React.createClass({
         errorText: React.PropTypes.string,
         disabled: React.PropTypes.bool,
         fullWidth: React.PropTypes.bool,
+        anchorOrigin: React.PropTypes.object,
+        targetOrigin: React.PropTypes.object,
         loading: React.PropTypes.bool,
         onSelect: React.PropTypes.func,
         onSearch: React.PropTypes.func
@@ -39,6 +41,8 @@ export default React.createClass({
                 searchText={this.props.searchText}
                 errorText={this.props.errorText}
                 fullWidth={this.props.fullWidth}
+                anchorOrigin={this.props.anchorOrigin}
+                targetOrigin={this.props.targetOrigin}
                 onNewRequest={this.props.onSelect}
                 onUpdateInput={this.props.onSearch}
             />
