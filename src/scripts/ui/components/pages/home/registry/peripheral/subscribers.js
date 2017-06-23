@@ -5,6 +5,7 @@ import Formsy from 'formsy-react';
 import { Record, List } from 'immutable';
 import Subscriber from '../../../../../../domain/registry/peripherals/subscriber';
 import DataList from '../../../../common/list/list';
+import EnabledIcon from '../../../../common/icons/boolean';
 import Form from './subscriber';
 
 const MODES = (new (Record({
@@ -12,12 +13,27 @@ const MODES = (new (Record({
     FORM: 'form'
 }))());
 
-const DATA_LIST_COLUMNS = [
-    'name',
-    'event',
-    'endpoint',
-    'enabled'
-];
+const DATA_LIST_COLUMNS = List([
+    {
+        displayName: 'Name',
+        columnName: 'name'
+    },
+    {
+        displayName: 'Event',
+        columnName: 'event'
+    },
+    {
+        displayName: 'Endpoint',
+        columnName: ['endpoint', 'name']
+    },
+    {
+        displayName: 'Enabled',
+        columnName: 'enabled',
+        formatter(value) {
+            return <EnabledIcon value={value} />;
+        }
+    }
+]);
 
 function updateList(list, item, values, position = 0) {
     const subscriber = item == null ? Subscriber(values) : item.merge(values);

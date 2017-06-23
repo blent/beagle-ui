@@ -8,8 +8,9 @@ import {
     TableRowColumn
 } from 'material-ui/Table';
 import isObject from 'lodash/isObject';
-import forEach from 'lodash/forEach';
-import map from 'lodash/map';
+import isString from 'lodash/isString';
+import isFunction from 'lodash/isFunction';
+import isArray from 'lodash/isArray';
 import cn from 'classnames';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import DynamicEventsMixin from '../../mixins/dynamic-events-mixin';
@@ -30,8 +31,10 @@ export default React.createClass({
         selectable: React.PropTypes.bool,
         multiSelectable: React.PropTypes.bool,
         fixedHeader: React.PropTypes.bool,
-        columns: React.PropTypes.array,
-        columnMetadata: React.PropTypes.array,
+        columns: React.PropTypes.oneOfType([
+            React.PropTypes.array,
+            React.PropTypes.object
+        ]),
         rows: React.PropTypes.object,
         currentPage: React.PropTypes.number,
         perPage: React.PropTypes.number,
@@ -60,40 +63,12 @@ export default React.createClass({
         };
     },
 
-    componentWillMount() {
-        this._buildColumns(this.props.columns, this.props.columnMetadata);
-    },
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.columnMetadata !== nextProps.columnMetadata) {
-            this._buildColumns(nextProps.columns, nextProps.columnMetadata);
-        } else if (this.props.columns !== nextProps.columns) {
-            this._buildColumns(nextProps.columns, nextProps.columnMetadata);
-        }
-    },
-
-    _columns: null,
-
-    _buildColumns(columns, metadata) {
-        this._columns = {};
-
-        forEach(columns, (name) => {
-            this._columns[name] = name;
-        });
-
-        forEach(metadata, (meta) => {
-            if (this._columns[meta.columnName]) {
-                this._columns = meta;
-            }
-        });
-    },
-
     _hasRows() {
         return this.props.rows && this.props.rows.size > 0;
     },
 
     _renderColumns() {
-        return map(this._columns, (metadata) => {
+        return this.props.columns.map((metadata) => {
             if (isObject(metadata)) {
                 return (
                     <TableHeaderColumn
@@ -115,12 +90,29 @@ export default React.createClass({
     },
 
     _renderRow(row) {
-        return map(this._columns, (meta, idx) => {
+        return this.props.columns.map((meta, idx) => {
+            const formatter = isObject(meta) ? meta.formatter : null;
             const path = isObject(meta) ? meta.columnName : meta;
             const key = `${idx}_col`;
+            let value = '';
+
+            if (isString(path)) {
+                value = row.get(path);
+            } else if (isArray(path)) {
+                value = row.getIn(path);
+            } else if (isFunction(path)) {
+                value = path(row);
+            } else {
+                throw new Error(`Invalid column metadata type: ${idx}`);
+            }
+
+            if (isFunction(formatter) === true) {
+                value = formatter(value);
+            }
+
             return (
                 <TableRowColumn key={key}>
-                    <span>{row.get(path)}</span>
+                    <span>{value}</span>
                 </TableRowColumn>
             );
         });

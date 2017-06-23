@@ -1,17 +1,27 @@
 /* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import AltContainer from 'alt-container';
+import { List } from 'immutable';
 import FluxContextMixin from '../../../../mixins/flux-context-mixin';
 import ListContainer from '../../../../common/list/container';
 
 const LIST_PROPS = {
     title: 'Registered endpoints',
     editable: true,
-    columns: [
-        'name',
-        'url',
-        'method'
-    ]
+    columns: List([
+        {
+            displayName: 'Name',
+            columnName: 'name'
+        },
+        {
+            displayName: 'Url',
+            columnName: 'url'
+        },
+        {
+            displayName: 'Method',
+            columnName: 'method'
+        },
+    ])
 };
 
 export default React.createClass({

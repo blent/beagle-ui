@@ -34,7 +34,10 @@ const ORIGIN_ANCHOR = { horizontal: 'left', vertical: 'top' };
 export default React.createClass({
     propTypes: {
         title: React.PropTypes.string,
-        columns: React.PropTypes.array,
+        columns: React.PropTypes.oneOfType([
+            React.PropTypes.array,
+            React.PropTypes.object
+        ]),
         editable: React.PropTypes.bool,
         items: React.PropTypes.object,
         quantity: React.PropTypes.number,
