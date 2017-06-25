@@ -1,6 +1,7 @@
 /* eslint-disable react/forbid-prop-types, react/no-unused-prop-types */
 import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
+import map from 'lodash/map';
 import DataSourceMixin from '../../mixins/data-source-mixin';
 import QuerySourceMixin from '../../mixins/query-source-mixin';
 import List from './list';
@@ -40,8 +41,15 @@ export default React.createClass({
         this.props.actions.edit(this._getItems().get(selected));
     },
 
-    _onDelete(items) {
-        this.props.actions.delete(items);
+    _onDelete(selected) {
+        const items = this._getItems();
+
+        if (selected === 'all') {
+            this.props.actions.delete(items);
+            return;
+        }
+
+        this.props.actions.delete(map(selected, i => items.get(i)));
     },
 
     _getItems() {

@@ -3,6 +3,7 @@ import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import Formsy from 'formsy-react';
 import { Record, List } from 'immutable';
+import includes from 'lodash/includes';
 import Subscriber from '../../../../../../domain/registry/peripherals/subscriber';
 import DataList from '../../../../common/list/list';
 import EnabledIcon from '../../../../common/icons/boolean';
@@ -83,8 +84,15 @@ export default React.createClass({
         });
     },
 
-    _onDelete(selectedIndex) {
-        console.log('selectedIndex', selectedIndex);
+    _onDelete(selected) {
+        if (selected === 'all') {
+            this.setValue(this.getValue().clear());
+            return;
+        }
+
+        this.setValue(this.getValue().toSeq().filter((_, idx) => {
+            return includes(selected, idx) === false;
+        }).toList());
     },
 
     _onFormSave(values) {

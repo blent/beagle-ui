@@ -14,11 +14,9 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FontIcon from 'material-ui/FontIcon';
 import MenuItem from 'material-ui/MenuItem';
 import cn from 'classnames';
-import { List } from 'immutable';
 import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
 import isNil from 'lodash/isNil';
-import map from 'lodash/map';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import DynamicEventsMixin from '../../mixins/dynamic-events-mixin';
 import DataTable from '../data-table/data-table';
@@ -103,14 +101,7 @@ export default React.createClass({
             return;
         }
 
-        if (this.state.selected === 'all') {
-            this.props.onDelete(this.props.items);
-            return;
-        }
-
-        this.props.onDelete(List(map(this.state.selected, (idx) => {
-            return this.props.items.get(idx);
-        })));
+        this.props.onDelete(this.state.selected);
     },
 
     _renderHeader() {
