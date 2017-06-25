@@ -70,6 +70,7 @@ export default React.createClass({
                 dataSource={this._getDataSource()}
                 disabled={this.props.disabled}
                 loading={this.isLoading()}
+                searchText={this.props.searchText}
                 errorText={this.getErrorText()}
                 onSelect={this._onSelect}
                 onSearch={this._onSearch}

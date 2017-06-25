@@ -2,17 +2,17 @@
 import React from 'react';
 import FontIcon from 'material-ui/FontIcon';
 
-const CN_CHECK = 'fa fa-check';
-const CN_MINUS = 'fa fa-minus';
+const CN_TRUE = 'fa fa-toggle-on';
+const CN_FALSE = 'fa fa-toggle-off';
 const iconStyles = {
     fontSize: 14
 };
 
 export default function BooleanIcon({ value }) {
-    let className = CN_CHECK;
+    let className = CN_TRUE;
 
-    if (value === false) {
-        className = CN_MINUS;
+    if (!value) {
+        className = CN_FALSE;
     }
 
     return (

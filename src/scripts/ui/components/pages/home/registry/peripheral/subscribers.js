@@ -73,6 +73,20 @@ export default React.createClass({
         });
     },
 
+    _onEdit(selectedIndex) {
+        const value = this.getValue();
+
+        this.setState({
+            mode: MODES.FORM,
+            item: value.get(selectedIndex),
+            itemIndex: selectedIndex
+        });
+    },
+
+    _onDelete(selectedIndex) {
+        console.log('selectedIndex', selectedIndex);
+    },
+
     _onFormSave(values) {
         this.setState({
             mode: MODES.LIST,
@@ -82,8 +96,9 @@ export default React.createClass({
 
         this.setValue(updateList(this.getValue(), this.state.item, values, this.state.itemIndex));
     },
+
     //
-    // _onFormDelete() {
+    // _onFormDelete(selectedIndex) {
     //
     // },
     //
@@ -109,6 +124,8 @@ export default React.createClass({
                 loading={this.props.loading}
                 quantity={quantity}
                 onCreate={this._onCreate}
+                onEdit={this._onEdit}
+                onDelete={this._onDelete}
             />
         );
     },
