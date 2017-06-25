@@ -18,7 +18,7 @@ export default function create(values = {}) {
         fields: Map(reduce(values.fields, (result, field, name) => {
             const res = result;
 
-            res[name] = Field(field);
+            res[name] = Field(field, name);
 
             return res;
         }, {}))

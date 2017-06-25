@@ -20,10 +20,10 @@ import LoginRoute from './routes/login';
 import HomeRoute from './routes/home/index';
 import GenericListRoute from './routes/home/generic-list';
 import GenericItemRoute from './routes/home/generic-item';
-import isUUID from './validation/uuid';
+import isUUID from './validation/rules/uuid';
 import {
-  minValue
-} from './validation/number';
+    minValue
+} from './validation/rules/number';
 
 const FIELDS = {
     container: Symbol('container')

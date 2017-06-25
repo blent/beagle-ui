@@ -7,42 +7,19 @@ import SelectField from 'material-ui/SelectField';
 import Toggle from 'material-ui/Toggle';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import merge from 'lodash/merge';
-import trim from 'lodash/trim';
 import get from 'lodash/get';
 import ValidationState from '../../../../../validation/state/state';
+import validationStateRunner from '../../../../../validation/runner';
+import validationStateFieldRunner from '../../../../../validation/field-runner';
 import EVENTS from '../../../../../../domain/registry/peripherals/events';
 import FormCard from '../../../../common/form/card';
 import AutoComplete from '../../../../common/autocomplete/container';
 
 const PATH_VALIDATION_NAME = ['fields', 'name'];
-const PATH_VALIDATION_NAME_ISVALID = PATH_VALIDATION_NAME.concat(['isValid']);
 const PATH_VALIDATION_NAME_MESSAGE = PATH_VALIDATION_NAME.concat(['message']);
 
 const PATH_VALIDATION_EVENT = ['fields', 'event'];
-const PATH_VALIDATION_EVENT_ISVALID = PATH_VALIDATION_EVENT.concat(['isValid']);
 const PATH_VALIDATION_EVENT_MESSAGE = PATH_VALIDATION_EVENT.concat(['message']);
-
-const PATH_VALIDATION_ENDPOINT = ['fields', 'endpoint'];
-const PATH_VALIDATION_ENDPOINT_ISVALID = PATH_VALIDATION_ENDPOINT.concat(['isValid']);
-const PATH_VALIDATION_ENDPOINT_MESSAGE = PATH_VALIDATION_ENDPOINT.concat(['message']);
-
-// const AUTOCOMPLETE_ANCHOR_ORIGIN = { vertical: 'top', horizontal: 'left' };
-// const AUTOCOMPLETE_TARGET_ORIGIN = { vertical: 'bottom', horizontal: 'left' };
-
-const VALIDATION_PATHS = {
-    name: {
-        isValid: PATH_VALIDATION_NAME_ISVALID,
-        message: PATH_VALIDATION_NAME_MESSAGE
-    },
-    event: {
-        isValid: PATH_VALIDATION_EVENT_ISVALID,
-        message: PATH_VALIDATION_EVENT_MESSAGE
-    },
-    endpoint: {
-        isValid: PATH_VALIDATION_ENDPOINT_ISVALID,
-        message: PATH_VALIDATION_ENDPOINT_MESSAGE
-    }
-};
 
 const EVENT_OPTONS = EVENTS.toSeq().map((value, key) => {
     const itemKey = key;
@@ -96,29 +73,51 @@ export default React.createClass({
     },
 
     getInitialState() {
-        const isNew = isNewItem(this.props.item);
-
         return {
             item: this.props.item.toJS(),
             isDirty: false,
             validation: ValidationState({
-                isValid: !isNew,
+                isValid: true,
                 fields: {
                     name: {
-                        isValid: !isNew,
-                        message: null
+                        isValid: true,
+                        message: null,
+                        rules: [
+                            'required',
+                            'notEmpty'
+                        ]
                     },
                     event: {
-                        isValid: !isNew,
-                        message: null
+                        isValid: true,
+                        message: null,
+                        rules: [
+                            'required'
+                        ]
                     },
                     endpoint: {
-                        isValid: !isNew,
-                        message: null
+                        isValid: true,
+                        message: null,
+                        rules: [
+                            'required'
+                        ]
                     }
                 }
             })
         };
+    },
+
+    componentWillMount() {
+        // run initial validation for not saved item
+
+        if (this._isNew() === true) {
+            const updated = validationStateRunner(this.state.validation, this.state.item);
+
+            if (updated !== this.state.validation) {
+                this.setState({
+                    validation: updated
+                });
+            }
+        }
     },
 
     _isNew() {
@@ -134,29 +133,11 @@ export default React.createClass({
     },
 
     _onNameChange(evt, value) {
-        const validation = {
-            isValid: trim(value) !== '',
-            message: null
-        };
-
-        if (validation.isValid === false) {
-            validation.message = 'Required';
-        }
-
-        this._setItemValue('name', value, validation);
+        this._setItemValue('name', value);
     },
 
     _onEventChange(evt, index, value) {
-        const validation = {
-            isValid: trim(value) !== '',
-            message: null
-        };
-
-        if (validation.isValid === false) {
-            validation.message = 'Required';
-        }
-
-        this._setItemValue('event', value, validation);
+        this._setItemValue('event', value);
     },
 
     _onEnabledToggle(evt, value) {
@@ -164,39 +145,36 @@ export default React.createClass({
     },
 
     _onEndpointSelect(chosenEndpoint) {
-        this._setItemValue('endpoint', chosenEndpoint, {
-            isValid: true,
-            message: null
-        });
+        this._setItemValue('endpoint', chosenEndpoint);
     },
 
-    _setItemValue(key, value, fieldValidation) {
+    _setItemValue(key, value) {
+        const values = merge({}, this.state.item, {
+            [key]: value
+        });
         let validation = this.state.validation;
+        const before = validation.get('fields').get(key);
 
-        if (fieldValidation) {
-            const isFieldValid = this.state.validation.getIn(VALIDATION_PATHS[key].isValid);
 
-            if (fieldValidation.isValid !== isFieldValid) {
-                validation = this.state.validation.withMutations((state) => {
-                    const field = state.fields.get(key).merge(fieldValidation);
-                    state.set('fields', state.fields.set(key, field));
+        if (before != null) {
+            const after = validationStateFieldRunner(before, values);
 
-                    const isFormValid = areAllValid(state);
-
-                    if (isFormValid !== state.isValid) {
-                        state.set('isValid', isFormValid);
-                    }
-
-                    return state;
+            if (before !== after) {
+                validation = validation.withMutations((input) => {
+                    const state = input;
+                    state.isValid = false;
+                    state.fields = state.fields.set(key, after);
                 });
+
+                if (before.isValid === false && after.isValid === true) {
+                    validation = validation.set('isValid', areAllValid(validation));
+                }
             }
         }
 
         this.setState({
             isDirty: true,
-            item: merge({}, this.state.item, {
-                [key]: value
-            }),
+            item: values,
             validation
         });
     },
