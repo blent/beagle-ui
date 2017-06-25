@@ -4,13 +4,17 @@ import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
 import isPlainObject from 'lodash/isPlainObject';
 import notEmpty from '../rules/not-empty';
+import notEmptyString from '../rules/not-empty-string';
 import number from '../rules/number';
 import required from '../rules/required';
+import oneOf from '../rules/one-of';
 
 const RULES = {
     notEmpty,
+    notEmptyString,
     number,
-    required
+    required,
+    oneOf
 };
 
 const DEFAULT_MESSAGE = 'Invalid value';
@@ -20,14 +24,26 @@ const Rule = Record({
 });
 
 function assertName(name) {
+    if (isString(name) === false) {
+        throw new TypeError(`Expected rule name to be "string", but got "${typeof name}"`);
+    }
+
     if (RULES[name] == null) {
         throw new TypeError(`Invalid validation rule name: ${name}`);
     }
 }
 
 function withParams(name, params) {
-    assertName(name);
-    const fn = RULES[name];
+    let fn = name;
+
+    if (isString(fn) === true) {
+        assertName(name);
+        fn = RULES[name];
+    }
+
+    if (params == null) {
+        return fn;
+    }
 
     return (values, value) => fn(values, value, params);
 }
@@ -45,8 +61,6 @@ export default function create(definition) {
 
         fn = RULES[definition];
     } else if (isPlainObject(definition)) {
-        assertName(definition.name);
-
         fn = withParams(definition.name, definition.options);
         message = withMessage(definition.message);
     } else if (isArray(definition)) {

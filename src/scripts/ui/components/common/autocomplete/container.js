@@ -17,6 +17,7 @@ export default React.createClass({
         disabled: React.PropTypes.bool,
         fullWidth: React.PropTypes.bool,
         searchText: React.PropTypes.string,
+        errorText: React.PropTypes.string,
         searchParam: React.PropTypes.string,
         anchorOrigin: React.PropTypes.object,
         targetOrigin: React.PropTypes.object,
@@ -71,7 +72,7 @@ export default React.createClass({
                 disabled={this.props.disabled}
                 loading={this.isLoading()}
                 searchText={this.props.searchText}
-                errorText={this.getErrorText()}
+                errorText={this.getErrorText() || this.props.errorText}
                 onSelect={this._onSelect}
                 onSearch={this._onSearch}
                 fullWidth={this.props.fullWidth}
