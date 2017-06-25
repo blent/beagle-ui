@@ -24,6 +24,7 @@ import isUUID from './validation/rules/uuid';
 import {
     minValue
 } from './validation/rules/number';
+import notEmptyString from './validation/rules/not-empty-string';
 
 const FIELDS = {
     container: Symbol('container')
@@ -148,6 +149,7 @@ class Application extends Alt {
         // Validation rules
         Formsy.addValidationRule('isUUID', isUUID);
         Formsy.addValidationRule('minValue', minValue);
+        Formsy.addValidationRule('notEmptyString', notEmptyString);
     }
 
     addActions(name, dependencies = [], constructor) {
