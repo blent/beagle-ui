@@ -105,11 +105,23 @@ export default React.createClass({
         this.setValue(updateList(this.getValue(), this.state.item, values, this.state.itemIndex));
     },
 
-    //
-    // _onFormDelete(selectedIndex) {
-    //
-    // },
-    //
+
+    _onFormDelete() {
+        const idx = this.state.itemIndex;
+
+        if (idx == null) {
+            return;
+        }
+
+        this.setState({
+            mode: MODES.LIST,
+            item: null,
+            itemIndex: null
+        });
+
+        this.setValue(this.getValue().delete(idx));
+    },
+
 
     _onFormCancel() {
         this.setState({
