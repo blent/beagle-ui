@@ -25,6 +25,7 @@ import {
     minValue
 } from './validation/rules/number';
 import notEmptyString from './validation/rules/not-empty-string';
+import required from './validation/rules/required';
 
 const FIELDS = {
     container: Symbol('container')
@@ -150,6 +151,7 @@ class Application extends Alt {
         Formsy.addValidationRule('isUUID', isUUID);
         Formsy.addValidationRule('minValue', minValue);
         Formsy.addValidationRule('notEmptyString', notEmptyString);
+        Formsy.addValidationRule('required', required);
     }
 
     addActions(name, dependencies = [], constructor) {

@@ -24,7 +24,10 @@ const PATH_ID = ['data', 'id'];
 const PATH_SUBSCRIBERS = ['data', 'subscribers'];
 
 const VALIDATION_NAME = {
-    notEmptyString: ''
+    notEmptyString: true
+};
+const VALIDATION_ERRORS_NAME = {
+    notEmptyString: 'Can not by empty'
 };
 const VALIDATION_MAJOR_MINOR = {
     minValue: 1
@@ -168,8 +171,8 @@ export default React.createClass({
                     floatingLabelText="Peripheral name"
                     disabled={this.isLoading()}
                     value={this.props.source.getIn(PATH_NAME)}
-                    validations="notEmptyString"
-                    validationError="Required"
+                    validations={VALIDATION_NAME}
+                    validationErrors={VALIDATION_ERRORS_NAME}
                     fullWidth
                     required
                 />

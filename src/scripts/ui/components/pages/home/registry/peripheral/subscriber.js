@@ -144,8 +144,16 @@ export default React.createClass({
         this._setItemValue('name', value);
     },
 
+    _onNameBlur() {
+        this._validateField('name');
+    },
+
     _onEventChange(evt, index, value) {
         this._setItemValue('event', value);
+    },
+
+    _onEventBlur() {
+        this._validateField('event');
     },
 
     _onEnabledToggle(evt, value) {
@@ -157,10 +165,18 @@ export default React.createClass({
     },
 
     _setItemValue(key, value) {
-        const values = merge({}, this.state.item, {
-            [key]: value
+        this.setState({
+            isEmpty: false,
+            isDirty: true,
+            item: merge({}, this.state.item, {
+                [key]: value
+            })
         });
+    },
+
+    _validateField(key) {
         let validation = this.state.validation;
+        const values = this.state.item;
         const before = validation.get('fields').get(key);
 
         if (this.state.isNew && this.state.isEmpty) {
@@ -183,12 +199,9 @@ export default React.createClass({
             }
         }
 
-        this.setState({
-            isEmpty: false,
-            isDirty: true,
-            item: values,
-            validation
-        });
+        if (this.state.validation !== validation) {
+            this.setState({ validation });
+        }
     },
 
     _onSave() {
@@ -215,6 +228,7 @@ export default React.createClass({
                     value={this.state.item.name || ''}
                     errorText={this.state.validation.getIn(PATH_VALIDATION_NAME_MESSAGE)}
                     onChange={this._onNameChange}
+                    onBlur={this._onNameBlur}
                     fullWidth
                 />
                 <SelectField
@@ -224,6 +238,7 @@ export default React.createClass({
                     value={this.state.item.event}
                     errorText={this.state.validation.getIn(PATH_VALIDATION_EVENT_MESSAGE)}
                     onChange={this._onEventChange}
+                    onBlur={this._onEventBlur}
                     fullWidth
                 >
                     {EVENT_OPTIONS_REACT}
