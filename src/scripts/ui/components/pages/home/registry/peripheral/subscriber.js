@@ -130,10 +130,18 @@ export default React.createClass({
         return {
             item: this.props.item.toJS(),
             isNew: isItemNew(this.props.item),
-            isEmpty: isItemEmpty(this.props.item),
             isDirty: false,
             validation: DEFAULT_VALIDATION_STATE
         };
+    },
+
+    componentWillMount() {
+        // It's new (not save) and not previously created
+        if (this.state.isNew === true && isItemEmpty(this.props.item) === true) {
+            this.setState({
+                validation: validationStateRunner(this.state.validation, this.state.item, false)
+            });
+        }
     },
 
     _isFormValid() {
@@ -141,47 +149,28 @@ export default React.createClass({
     },
 
     _onNameChange(evt, value) {
-        this._setItemValue('name', value);
+        this._setFieldValue('name', value);
     },
 
     _onNameBlur() {
-        this._validateField('name');
+        this._setFieldValidation('name');
     },
 
     _onEventChange(evt, index, value) {
-        this._setItemValue('event', value);
-    },
-
-    _onEventBlur() {
-        this._validateField('event');
+        this._setFieldValue('event', value, true);
     },
 
     _onEnabledToggle(evt, value) {
-        this._setItemValue('enabled', value);
+        this._setFieldValue('enabled', value, true);
     },
 
     _onEndpointSelect(chosenEndpoint) {
-        this._setItemValue('endpoint', chosenEndpoint);
+        this._setFieldValue('endpoint', chosenEndpoint, true);
     },
 
-    _setItemValue(key, value) {
-        this.setState({
-            isEmpty: false,
-            isDirty: true,
-            item: merge({}, this.state.item, {
-                [key]: value
-            })
-        });
-    },
-
-    _validateField(key) {
+    _validateField(key, values) {
         let validation = this.state.validation;
-        const values = this.state.item;
         const before = validation.get('fields').get(key);
-
-        if (this.state.isNew && this.state.isEmpty) {
-            validation = validationStateRunner(validation, values);
-        }
 
         if (before != null) {
             const after = validationStateFieldRunner(before, values);
@@ -199,9 +188,29 @@ export default React.createClass({
             }
         }
 
+        return validation;
+    },
+
+    _setFieldValidation(key) {
+        const validation = this._validateField(key, this.state.item);
+
         if (this.state.validation !== validation) {
             this.setState({ validation });
         }
+    },
+
+    _setFieldValue(key, value, validate = false) {
+        const values = merge({}, this.state.item, {
+            [key]: value
+        });
+
+        this.setState({
+            isDirty: true,
+            item: values,
+            validation: validate === true ?
+                this._validateField(key, values) :
+                this.state.validation
+        });
     },
 
     _onSave() {
@@ -238,7 +247,6 @@ export default React.createClass({
                     value={this.state.item.event}
                     errorText={this.state.validation.getIn(PATH_VALIDATION_EVENT_MESSAGE)}
                     onChange={this._onEventChange}
-                    onBlur={this._onEventBlur}
                     fullWidth
                 >
                     {EVENT_OPTIONS_REACT}

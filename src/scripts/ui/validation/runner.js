@@ -4,7 +4,7 @@ export function isStateValid(state) {
     return state.fields.every(i => i.isValid);
 }
 
-export function fieldRunner(field, values) {
+export function fieldRunner(field, values, verbose = true) {
     return field.withMutations((input) => {
         const that = input;
         const value = values[field.name];
@@ -13,10 +13,12 @@ export function fieldRunner(field, values) {
             if (rule.fn(values, value) === false) {
                 that.isValid = false;
 
-                if (isFunction(rule.message) === false) {
-                    that.message = rule.message;
-                } else {
-                    that.message = rule.message(field.name, value);
+                if (verbose !== false) {
+                    if (isFunction(rule.message) === false) {
+                        that.message = rule.message;
+                    } else {
+                        that.message = rule.message(field.name, value);
+                    }
                 }
 
                 return false; // exit
@@ -29,7 +31,7 @@ export function fieldRunner(field, values) {
     });
 }
 
-export function stateRunner(state, values) {
+export function stateRunner(state, values, verbose = true) {
     return state.withMutations((input) => {
         const that = input;
         const seq = that.fields.keys();
@@ -38,7 +40,7 @@ export function stateRunner(state, values) {
 
         while (item.done === false) {
             const fieldName = item.value;
-            const fieldResult = fieldRunner(that.fields.get(fieldName), values);
+            const fieldResult = fieldRunner(that.fields.get(fieldName), values, verbose);
 
             if (fieldResult.isValid === false) {
                 that.isValid = false;
