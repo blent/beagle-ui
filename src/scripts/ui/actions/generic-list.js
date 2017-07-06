@@ -35,7 +35,7 @@ export default composeClass({
     },
 
     delete(entries) {
-        this.service.delete(entries)
+        this.service.deleteMany(entries)
           .then(() => this.deleteComplete(entries))
           .catch(onAsyncFail(this, 'delete'));
 

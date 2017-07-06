@@ -6,6 +6,7 @@ import merge from 'lodash/merge';
 import constant from 'lodash/constant';
 import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
+import isArray from 'lodash/isArray';
 import { Map, List } from 'immutable';
 import { requires } from '../../../infrastructure/utils/contracts';
 import isImmutable from '../../../infrastructure/utils/is-immutable';
@@ -80,25 +81,34 @@ const EndpointsService = composeClass({
         });
     },
 
-    delete(endpoints) {
-        if (isNil(endpoints)) {
-            return Promise.reject(new Error('Missed endpoint(s)'));
+    delete(endpoint) {
+        if (isNil(endpoint) === true) {
+            return Promise.reject(new Error('Missed endpoint'));
         }
 
-        if (List.isList(endpoints) && endpoints.size === 0) {
-            return Promise.reject(new Error('Missed endpoint(s)'));
+        if (isNil(endpoint.id) === true || endpoint.id < 0) {
+            return Promise.reject(new Error('Not saved endpoint'));
         }
 
-        if (!List.isList(endpoints) && (isNil(endpoints.id) || endpoints.id <= 0)) {
-            return Promise.reject(new Error('Invalid endpoint'));
+        return this[FIELDS.http].execute({
+            method: 'DELETE',
+            url: `registry/endpoint/${endpoint.id}`
+        }).then(NO_RETURN);
+    },
+
+    deleteMany(endpoints) {
+        if (isNil(endpoints) === true) {
+            return Promise.reject(new Error('Missed endpoints'));
         }
 
-        const data = [];
+        if (List.isList(endpoints) === false && isArray(endpoints) === false) {
+            return Promise.reject(new Error('Invalid list of endpoints'));
+        }
 
-        if (List.isList(endpoints)) {
-            endpoints.forEach(e => data.push(e.id));
-        } else {
-            data.push(endpoints.id);
+        const data = endpoints.map(i => i.id);
+
+        if (data.length === 0) {
+            return Promise.reject(new Error('Missed endpoints'));
         }
 
         return this[FIELDS.http].execute({

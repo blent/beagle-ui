@@ -5,6 +5,7 @@ import map from 'lodash/map';
 import constant from 'lodash/constant';
 import isNil from 'lodash/isNil';
 import isEmpty from 'lodash/isEmpty';
+import isArray from 'lodash/isArray';
 import merge from 'lodash/merge';
 import { Map, List } from 'immutable';
 import { requires } from '../../../infrastructure/utils/contracts';
@@ -79,14 +80,40 @@ const PeripheralsService = composeClass({
         });
     },
 
-    delete(id) {
-        if (id < 0) {
-            return Promise.reject(new Error('Invalid id'));
+    delete(peripheral) {
+        if (isNil(peripheral) === true) {
+            return Promise.reject(new Error('Missed peripheral'));
+        }
+
+        if (isNil(peripheral.id) === true || peripheral.id < 0) {
+            return Promise.reject(new Error('Not saved peripheral'));
         }
 
         return this[FIELDS.http].execute({
-            method: 'PUT',
-            url: `registry/peripherals/${id}`
+            method: 'DELETE',
+            url: `registry/peripheral/${peripheral.id}`
+        }).then(NO_RETURN);
+    },
+
+    deleteMany(peripherals) {
+        if (isNil(peripherals) === true) {
+            return Promise.reject(new Error('Missed peripherals'));
+        }
+
+        if (List.isList(peripherals) === false && isArray(peripherals) === false) {
+            return Promise.reject(new Error('Invalid list of peripherals'));
+        }
+
+        const data = peripherals.map(i => i.id);
+
+        if (data.length === 0) {
+            return Promise.reject(new Error('Missed peripherals'));
+        }
+
+        return this[FIELDS.http].execute({
+            method: 'DELETE',
+            url: 'registry/peripherals',
+            data
         }).then(NO_RETURN);
     }
 });
