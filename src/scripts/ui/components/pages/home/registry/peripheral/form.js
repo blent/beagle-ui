@@ -158,7 +158,7 @@ export default React.createClass({
     render() {
         return (
             <FormContainer
-                title={'Peripheral'}
+                title="Peripheral"
                 actions={this.props.actions}
                 source={this.props.source}
                 onChange={this._onChange}

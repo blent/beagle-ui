@@ -27,7 +27,7 @@ export default React.createClass({
         return (
             <FormsySelect
                 name="method"
-                floatingLabelText="Endpoint http method"
+                floatingLabelText="HTTP Method"
                 disabled={this.isLoading()}
                 value={this.props.source.getIn(PATH_METHOD)}
                 fullWidth
@@ -50,21 +50,23 @@ export default React.createClass({
     render() {
         return (
             <FormContainer
-                title={'Endpoint'}
+                title="Endpoint"
                 actions={this.props.actions}
                 source={this.props.source}
             >
                 <FormsyText
                     name="name"
-                    floatingLabelText="Endpoint name"
+                    floatingLabelText="Name"
                     value={this.props.source.getIn(PATH_NAME)}
                     fullWidth
                     required
                 />
                 <FormsyText
                     name="url"
-                    floatingLabelText="Endpoint url"
+                    floatingLabelText="Url"
                     value={this.props.source.getIn(PATH_URL)}
+                    validations="isUrl"
+                    validationError="Invalid url"
                     fullWidth
                     required
                 />
