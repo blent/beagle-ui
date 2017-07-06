@@ -271,7 +271,7 @@ export default React.createClass({
                     labelPosition="right"
                     disabled={this.props.loading}
                     value={this.state.item.enabled}
-                    defaultToggled={false}
+                    defaultToggled={this.state.item.enabled}
                     onToggle={this._onEnabledToggle}
                 />
             </FormCard>
