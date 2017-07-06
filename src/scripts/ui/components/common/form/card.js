@@ -45,7 +45,7 @@ export default React.createClass({
     _renderToolbar() {
         return (
             <Toolbar
-                text={this.props.title}
+                title={this.props.title}
                 loading={this.props.loading}
                 hideSave={this.props.hideSave}
                 hideDelete={this.props.hideDelete}
