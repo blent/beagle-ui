@@ -3,8 +3,6 @@
 
 UI Dashboard for [Beagle project](https://github.com/blent/beagle)
 
-**Note: Work in progress**
-
 ## Installation
 
 ```sh
