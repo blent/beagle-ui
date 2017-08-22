@@ -8,7 +8,7 @@ const iconStyles = {
     fontSize: 14
 };
 
-export default function BooleanIcon({ value }) {
+export default function BooleanIcon({ value, disabled }) {
     let className = CN_TRUE;
 
     if (!value) {
@@ -17,6 +17,7 @@ export default function BooleanIcon({ value }) {
 
     return (
         <FontIcon
+            disabled={disabled}
             className={className}
             style={iconStyles}
         />

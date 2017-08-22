@@ -6,6 +6,7 @@ import Login from './pages/login/index';
 import Home from './pages/home/index';
 import Monitoring from './pages/home/monitoring/index';
 import ActivityMonitoring from './pages/home/monitoring/activity/index';
+import SystemMonitoring from './pages/home/monitoring/system/index';
 import PeripheralsRegistry from './pages/home/registry/peripherals/index';
 import EndpointsRegistry from './pages/home/registry/endpoints/index';
 import EditPeripheral from './pages/home/registry/peripheral/index';
@@ -49,6 +50,7 @@ export default React.createClass({
                         component={Home}
                         onEnter={this.props.flux.getRouteHandler('home')}
                     >
+                        <IndexRedirect to="/home/monitoring/system" />
                         <Route
                             path="monitoring"
                             component={Monitoring}
@@ -57,6 +59,11 @@ export default React.createClass({
                                 path="activity"
                                 component={ActivityMonitoring}
                                 onEnter={this.props.flux.getRouteHandler('home/monitoring/activity')}
+                            />
+                            <Route
+                                path="system"
+                                component={SystemMonitoring}
+                                onEnter={this.props.flux.getRouteHandler('home/monitoring/system')}
                             />
                         </Route>
                         <Route

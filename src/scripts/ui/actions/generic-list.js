@@ -26,7 +26,7 @@ export default composeClass({
         );
     },
 
-    find(query) {
+    find(query = null) {
         this.service.find(query)
             .then(onAsyncComplete(this, 'find'))
             .catch(onAsyncFail(this, 'find'));

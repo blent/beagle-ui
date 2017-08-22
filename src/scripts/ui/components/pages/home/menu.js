@@ -15,7 +15,12 @@ export default function Menu() {
                 <ListItem
                     key="monitoring-activity"
                     containerElement={<Link to="/home/monitoring/activity" />}
-                    primaryText="Active"
+                    primaryText="Activity"
+                />
+                <ListItem
+                    key="monitoring-system"
+                    containerElement={<Link to="/home/monitoring/system" />}
+                    primaryText="System"
                 />
             </List>
             <List>

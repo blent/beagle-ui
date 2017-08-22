@@ -7,6 +7,7 @@ import HttpClient from '../infrastructure/http/client';
 import Logger from '../infrastructure/logging/logger';
 import AuthService from './auth/service';
 import ActivityMonitoringService from './monitoring/activity/service';
+import SystemMonitoringService from './monitoring/system/service';
 import PeripheralsRegistryService from './registry/peripherals/service';
 import EndpointsRegistryService from './registry/endpoints/service';
 
@@ -66,6 +67,11 @@ const ApplicationConainer = composeClass({
         this.register(NAMESPACES.domain.monitoring()).service('activity', [
             NAMESPACES.infrastructure.http('client')
         ], ActivityMonitoringService);
+
+        // System Monitoring Service
+        this.register(NAMESPACES.domain.monitoring()).service('system', [
+            NAMESPACES.infrastructure.http('client')
+        ], SystemMonitoringService);
 
         // Peripherals Registry Service
         this.register(NAMESPACES.domain.registry()).service('peripherals', [

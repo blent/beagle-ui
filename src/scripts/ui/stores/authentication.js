@@ -2,6 +2,10 @@ import composeClass from 'compose-class';
 import DataSource from '../models/data-source';
 import { requires } from '../../infrastructure/utils/contracts';
 
+function defer(cb) {
+    setTimeout(cb);
+}
+
 export default composeClass({
     constructor(authActions, router) {
         requires('auth actions', authActions);
@@ -26,7 +30,7 @@ export default composeClass({
             data: credentials
         }));
 
-        this.router.navigate('/home');
+        defer(() => this.router.navigate('/home'));
     },
 
     onLoginFail(err) {
@@ -42,7 +46,7 @@ export default composeClass({
             data: credentials
         }));
 
-        this.router.navigate('/login');
+        defer(() => this.router.navigate('/login'));
     },
 
     onLogoutFail(err) {

@@ -8,5 +8,15 @@ export default {
 
     getQueryResult() {
         return this.props.source.getIn(PATH_QUERY_RESULT);
+    },
+
+    getFromQueryResult(path) {
+        const query = this.getQueryResult();
+
+        if (query == null) {
+            return null;
+        }
+
+        return query.getIn(path);
     }
 };

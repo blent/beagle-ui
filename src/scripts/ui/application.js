@@ -84,6 +84,19 @@ class Application extends Alt {
             constant({ take: 10, skip: 0 })
         ], GenericListRoute);
 
+        // System Monitoring
+        this.addActions('monitoring/system', [
+            constant('system monitoring'),
+            namespaces.domain.monitoring('system'),
+            namespaces.ui.actions('notifications'),
+        ], GenericListActions);
+        this.addStore('monitoring/system', [
+            namespaces.ui.actions('monitoring/system')
+        ], GenericListStore);
+        this.addRouteHandler('home/monitoring/system', [
+            namespaces.ui.actions('monitoring/system')
+        ], GenericListRoute);
+
         // Peripherals Registry List
         this.addActions('registry/peripherals', [
             constant('peripherals'),
