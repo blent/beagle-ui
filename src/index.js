@@ -4,6 +4,9 @@ import {
     browserHistory
 } from 'react-router';
 import get from 'lodash/get';
+import 'font-awesome/css/font-awesome.css';
+import 'flexboxgrid/dist/flexboxgrid.css';
+// import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import AppComponent from './components/app';
 import App from './application';
 import './index.css';
