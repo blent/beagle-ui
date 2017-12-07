@@ -20,13 +20,11 @@ import isNil from 'lodash/isNil';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import DynamicEventsMixin from '../../mixins/dynamic-events-mixin';
 import DataTable from '../data-table/data-table';
-import {
-    menuIcon as menuIconCss
-} from './list.css';
+import styles from './list.module.css';
 
-const CSS_ICON_CREATE = cn('fa', 'fa-plus', menuIconCss);
-const CSS_ICON_REMOVE = cn('fa', 'fa-minus', menuIconCss);
-const CSS_ICON_EDIT = cn('fa', 'fa-pencil-square-o', menuIconCss);
+const CSS_ICON_CREATE = cn('fa', 'fa-plus', styles.menuIcon);
+const CSS_ICON_REMOVE = cn('fa', 'fa-minus', styles.menuIcon);
+const CSS_ICON_EDIT = cn('fa', 'fa-pencil-square-o', styles.menuIcon);
 const ORIGIN_ANCHOR = { horizontal: 'left', vertical: 'top' };
 
 export default React.createClass({

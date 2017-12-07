@@ -1,9 +1,7 @@
 import React from 'react';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import cn from 'classnames';
-import {
-    overlay as overlayCss
-} from './overlay.css';
+import styles from './overlay.module.css';
 
 export default React.createClass({
     propTypes: {
@@ -23,7 +21,7 @@ export default React.createClass({
             return null;
         }
 
-        const className = cn(overlayCss, this.props.className);
+        const className = cn(styles.overlay, this.props.className);
 
         return (
             <div

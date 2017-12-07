@@ -16,9 +16,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import DynamicEventsMixin from '../../mixins/dynamic-events-mixin';
 import Loader from '../loader/loader';
 import Pager from '../pager/pager';
-import {
-    clickable as clickabaleCss
-} from './data-table.css';
+import styles from './data-table.module.css';
 
 const WRAPPER_STYLE = {
     minHeight: '100px'
@@ -124,7 +122,7 @@ export default React.createClass({
         }
 
         const className = cn({
-            [clickabaleCss]: this.props.clickable
+            [styles.clickable]: this.props.clickable
         });
 
         return this.props.rows.map((row, idx) => {

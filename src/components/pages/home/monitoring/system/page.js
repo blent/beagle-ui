@@ -10,9 +10,7 @@ import GeneralStats from './general-stats';
 import CpuStats from './cpu-stats';
 import MemoryStats from './memory-stats';
 import StorageStats from './storage-stats';
-import {
-    pageRow as pageRowCss
-} from './page.css';
+import styles from './page.module.css';
 
 const PATH_CPU = ['cpu'];
 const PATH_MEMORY = ['memory'];
@@ -43,7 +41,7 @@ export default React.createClass({
     },
 
     render() {
-        const rowClassName = cn('row', pageRowCss);
+        const rowClassName = cn('row', styles.pageRow);
 
         return (
             <Card

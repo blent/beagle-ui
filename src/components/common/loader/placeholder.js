@@ -1,12 +1,10 @@
 import React from 'react';
-import {
-    placeholder as placeholderCss
-} from './placeholder.css';
+import styles from './placeholder.module.css';
 
 export default function EmptyLoader() {
     return (
         <div
-            className={placeholderCss}
+            className={styles.placeholder}
         />
     );
 }

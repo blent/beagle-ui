@@ -10,9 +10,7 @@ import isNumber from 'lodash/isNumber';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import map from 'lodash/map';
 import FormCard from './card';
-import {
-    card as cardCss
-} from './form.css';
+import styles from './form.module.css';
 
 function isModelNew(model) {
     if (!model) {
@@ -178,7 +176,7 @@ export default React.createClass({
     _renderChildren() {
         const cardClassNames = cn({
             card: true,
-            [cardCss]: true,
+            [styles.card]: true,
             'card-loading': this._isLoading()
         });
 

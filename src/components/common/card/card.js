@@ -7,9 +7,7 @@ import {
     CardHeader
 } from 'material-ui/Card';
 import Loader from '../../common/loader/loader';
-import {
-    card as cardCss
-} from './card.css';
+import styles from './card.module.css';
 
 export default React.createClass({
     propTypes: {
@@ -54,7 +52,7 @@ export default React.createClass({
     render() {
         const className = cn({
             card: true,
-            [cardCss]: true,
+            [styles.card]: true,
             'card-loading': this.props.loading,
             [this.props.className]: true
         });

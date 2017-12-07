@@ -10,11 +10,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import map from 'lodash/map';
 import isNaN from 'lodash/isNaN';
 import DynamicEventsMixin from '../../mixins/dynamic-events-mixin';
-import {
-    button as buttonCss,
-    hyphen as hyphenCss,
-    current as currentCss
-} from './pager.css';
+import styles from './pager.module.css';
 
 export default React.createClass({
     propTypes: {
@@ -89,7 +85,7 @@ export default React.createClass({
                     primary
                     key="prev"
                     label="Previous"
-                    className={buttonCss}
+                    className={styles.button}
                     icon={<ChevronLeft />}
                     onClick={this.props.onPrev}
                 />
@@ -106,7 +102,7 @@ export default React.createClass({
                     primary
                     key="next"
                     label="Next"
-                    className={buttonCss}
+                    className={styles.button}
                     icon={<ChevronRight />}
                     labelPosition="before"
                     onClick={this.props.onNext}
@@ -123,7 +119,7 @@ export default React.createClass({
                 return (
                     <span
                         key={`hyphen_${index}`}
-                        className={hyphenCss}
+                        className={styles.hyphen}
                     >
                         &hellip;
                     </span>
@@ -134,7 +130,7 @@ export default React.createClass({
                 <FlatButton
                     key={pageNum}
                     label={pageNum}
-                    className={buttonCss}
+                    className={styles.button}
                     data-page={pageNum}
                     onClick={this.props.onGotoPage}
                     primary={pageNum !== this.props.currentPage}
@@ -146,7 +142,7 @@ export default React.createClass({
     _renderCurrentPage() {
         return (
             <span
-                className={currentCss}
+                className={styles.current}
             >
                 {`${this.props.currentPage} of ${this._numPages()}`}
             </span>

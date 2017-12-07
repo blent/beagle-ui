@@ -41,6 +41,10 @@ function formatData(data) {
 }
 
 function renderTooltipContent(data) {
+    if (data == null || data.payload == null) {
+        return null;
+    }
+
     if (data.payload.length === 0) {
         return null;
     }

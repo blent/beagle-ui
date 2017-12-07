@@ -2,23 +2,18 @@
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import Menu from './menu';
-import {
-    container as containerCss,
-    body as bodyCss,
-    content as contentCss,
-    bar as barCss
-} from './index.css';
+import styles from './index.module.css';
 
 export default function Home({ children }) {
     return (
-        <div className={containerCss}>
+        <div className={styles.container}>
             <AppBar
                 title="Beagle"
-                className={barCss}
+                className={styles.bar}
             />
 
-            <div className={bodyCss}>
-                <div className={contentCss}>
+            <div className={styles.body}>
+                <div className={styles.content}>
                     {children}
                 </div>
                 <Menu />

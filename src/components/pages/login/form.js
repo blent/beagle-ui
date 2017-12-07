@@ -8,9 +8,7 @@ import {
     CardActions
 } from 'material-ui/Card';
 import Loader from '../../common/loader/loader';
-import {
-    container as containerStyle
-} from './form.css';
+import styles from './form.module.css';
 
 export default React.createClass({
     propTypes: {
@@ -63,7 +61,7 @@ export default React.createClass({
 
     render() {
         return (
-            <div className={containerStyle}>
+            <div className={styles.container}>
                 <Paper zDepth={5}>
                     <Card>
                         <CardText>

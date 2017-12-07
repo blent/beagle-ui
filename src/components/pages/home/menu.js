@@ -3,13 +3,11 @@ import Paper from 'material-ui/Paper';
 import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import { Link } from 'react-router';
-import {
-    container as containerCss
-} from './menu.css';
+import styles from './menu.module.css';
 
 export default function Menu() {
     return (
-        <Paper className={containerCss}>
+        <Paper className={styles.container}>
             <List>
                 <Subheader>Monitoring</Subheader>
                 <ListItem
