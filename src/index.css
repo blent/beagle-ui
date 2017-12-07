@@ -1,0 +1,28 @@
+/*@import "~font-awesome/css/font-awesome.css";
+@import "~flexboxgrid/dist/flexboxgrid.css";
+@import "~roboto-fontface/css/roboto/roboto-fontface.css";*/
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.card {
+    margin: 2em;
+    opacity: 1;
+    filter: alpha(opacity=50);
+    transition: opacity 1s ease-in-out;
+}
+
+.card-loading {
+    opacity: 0.5;
+}
+
+.form-control {
+    width: 100% !important;
+}
+
+.form-control-checkbox {
+    margin-top: 24px;
+}

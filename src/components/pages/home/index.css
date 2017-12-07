@@ -1,0 +1,25 @@
+@import "../../../_vars.css";
+
+.container {
+     display: flex;
+     flex-direction: column;
+     min-height: 100vh;
+}
+
+.bar {
+  background: linear-gradient(to right, $color_brand_primary_dark, $color_brand_primary_light 100%);
+  background-size: cover;
+}
+
+.body {
+    display: flex;
+    flex: 1;
+    background-color: #edecec;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+.content {
+    flex: 1;
+}

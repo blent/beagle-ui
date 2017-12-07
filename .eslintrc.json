@@ -1,5 +1,5 @@
 {
-  "extends": ["airbnb", "plugin:lodash/recommended"],
+  "extends": ["airbnb"],
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 6,
@@ -10,10 +10,7 @@
     "mocha": true
   },
   "plugins": [
-      "react",
-      "lodash",
-      "promise",
-      "mocha"
+      "react"
   ],
   "rules": {
     "indent": [2, 4],
@@ -30,7 +27,7 @@
     "react/jsx-indent-props": [2, 4],
     "react/forbid-prop-types": 0,
     "react/require-default-props": 0,
-    "lodash/prefer-lodash-method": 0,
-    "import/no-unresolved": 1
+    "import/no-unresolved": 1,
+    "jsx-a11y/anchor-is-valid": 0
   }
 }
