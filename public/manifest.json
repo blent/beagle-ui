@@ -1,6 +1,6 @@
 {
-  "short_name": "pt-app-dashboard",
-  "name": "Polltalk Dashboard",
+  "short_name": "beagle",
+  "name": "Beagle Dashboard",
   "icons": [
     {
       "src": "favicon.ico",
