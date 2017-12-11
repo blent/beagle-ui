@@ -157,17 +157,28 @@ module.exports = {
                             cacheDirectory: true,
                         },
                     },
-                    {
-                        test: /^(?!.*?\.module).*\.css$/,
-                        use: ['style-loader', 'css-loader'],
-                    },
                     // "postcss" loader applies autoprefixer to our CSS.
                     // "css" loader resolves paths in CSS and adds assets as dependencies.
                     // "style" loader turns CSS into JS modules that inject <style> tags.
                     // In production, we use a plugin to extract that CSS to a file, but
                     // in development "style" loader enables hot editing of CSS.
                     {
-                        test: /\.css$/,
+                        // not CSS modules
+                        test: /^(?!.*?\.module).*\.css$/,
+                        use: [
+                            require.resolve('style-loader'),
+                            {
+                                loader: require.resolve('css-loader'),
+                                options: {
+                                    importLoaders: 1,
+                                    modules: false,
+                                },
+                            },
+                            postCSS
+                        ],
+                    },
+                    {
+                        test: /\.module.css/,
                         use: [
                             require.resolve('style-loader'),
                             {

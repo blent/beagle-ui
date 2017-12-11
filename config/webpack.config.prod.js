@@ -172,7 +172,7 @@ module.exports = {
                     // use the "style" loader inside the async code so CSS from them won't be
                     // in the main CSS file.
                     {
-                        test: /\.css$/,
+                        test: /\.module.css/,
                         loader: ExtractTextPlugin.extract(Object.assign(
                             {
                                 fallback: {
@@ -188,6 +188,34 @@ module.exports = {
                                             importLoaders: 1,
                                             minimize: true,
                                             modules: true,
+                                            sourceMap: shouldUseSourceMap,
+                                        },
+                                    },
+                                    postCSS
+                                ],
+                            },
+                            extractTextPluginOptions,
+                        )),
+                        // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
+                    },
+                    {
+                        // not CSS modules
+                        test: /^(?!.*?\.module).*\.css$/,
+                        loader: ExtractTextPlugin.extract(Object.assign(
+                            {
+                                fallback: {
+                                    loader: require.resolve('style-loader'),
+                                    options: {
+                                        hmr: false,
+                                    },
+                                },
+                                use: [
+                                    {
+                                        loader: require.resolve('css-loader'),
+                                        options: {
+                                            importLoaders: 1,
+                                            minimize: true,
+                                            modules: false,
                                             sourceMap: shouldUseSourceMap,
                                         },
                                     },
