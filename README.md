@@ -9,10 +9,14 @@ UI Dashboard for [Beagle project](https://github.com/blent/beagle)
 
 ## Installation
 
-```sh
+### Production
 
-git clone https://github.com/blent/beagle-ui.git
-cd beagle-ui
-yarn install && gulp build --env production
-cp -R ./dist/public/ /PATH_TO_BEAGLE_BIN/
+```sh
+yarn install && yarn build
+```
+
+### Development
+
+```sh
+yarn install && yarn start
 ```
