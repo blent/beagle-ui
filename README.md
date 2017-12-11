@@ -13,6 +13,7 @@ UI Dashboard for [Beagle project](https://github.com/blent/beagle)
 
 ```sh
 yarn install && yarn build
+sudo beagle --http-static-dir /PATH_TO_BEAGLE_UI/build
 ```
 
 ### Development
