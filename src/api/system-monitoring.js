@@ -1,29 +1,14 @@
-import composeClass from 'compose-class';
-import Symbol from 'es6-symbol';
-import { requires } from '../utils/contracts';
+import Api from './core/api';
 import Stats from '../models/monitoring/stats';
 
-const FIELDS = {
-    http: Symbol('http')
-};
-
-const SystemMonitoringService = composeClass({
-    constructor(http) {
-        requires('http', http);
-
-        this[FIELDS.http] = http;
-    },
-
-    find() {
-        return this[FIELDS.http].execute({
-            method: 'GET',
-            url: 'monitoring/system'
-        }).then((res) => {
-            return Stats(res.body);
+export default class SystemMonitoringApi extends Api {
+    constructor(client) {
+        super({
+            client,
+            mapper: Stats,
+            endpoints: {
+                query: 'monitoring/system'
+            }
         });
     }
-});
-
-export default function create(...args) {
-    return new SystemMonitoringService(...args);
 }

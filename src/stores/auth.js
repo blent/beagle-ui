@@ -1,4 +1,3 @@
-import composeClass from 'compose-class';
 import DataSource from '../models/data-source';
 import { requires } from '../utils/contracts';
 
@@ -6,7 +5,7 @@ function defer(cb) {
     setTimeout(cb);
 }
 
-export default composeClass({
+export default class AuthStore {
     constructor(authActions, router) {
         requires('auth actions', authActions);
         requires('router', router);
@@ -17,11 +16,11 @@ export default composeClass({
         this.state = DataSource({
             data: null
         });
-    },
+    }
 
     onLogin() {
         this.setState(this.state.set('isLoading', true));
-    },
+    }
 
     onLoginComplete(credentials) {
         this.setState(DataSource({
@@ -31,14 +30,14 @@ export default composeClass({
         }));
 
         defer(() => this.router.navigate('/home'));
-    },
+    }
 
     onLoginFail(err) {
         this.setState(this.state.merge({
             isLoading: false,
             error: err
         }));
-    },
+    }
 
     onLogoutComplete(credentials) {
         this.setState(this.state.merge({
@@ -47,7 +46,7 @@ export default composeClass({
         }));
 
         defer(() => this.router.navigate('/login'));
-    },
+    }
 
     onLogoutFail(err) {
         this.setState(this.state.merge({
@@ -55,4 +54,4 @@ export default composeClass({
             error: err
         }));
     }
-});
+}

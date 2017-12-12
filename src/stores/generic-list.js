@@ -1,5 +1,3 @@
-/* eslint-disable lodash/prefer-includes */
-import composeClass from 'compose-class';
 import { List } from 'immutable';
 import urlJoin from 'url-join';
 import DataSource from '../models/data-source';
@@ -9,7 +7,7 @@ import { requires } from '../utils/contracts';
 const PATH_QUERY_RESULT = ['data', 'result'];
 const PATH_QUERY_RESULT_ITEMS = ['data', 'result', 'items'];
 
-export default composeClass({
+export default class GenericListStore {
     constructor(actions, router, editRoute) {
         requires('actions', actions);
 
@@ -22,7 +20,7 @@ export default composeClass({
             error: null,
             data: QueryResult()
         });
-    },
+    }
 
     onCreate() {
         if (this.router && this.editRoute) {
@@ -30,7 +28,7 @@ export default composeClass({
                 this.router.redirect(this.editRoute);
             });
         }
-    },
+    }
 
     onEdit(entry) {
         if (this.router && this.editRoute) {
@@ -38,14 +36,14 @@ export default composeClass({
                 this.router.redirect(urlJoin(this.editRoute, entry.id));
             });
         }
-    },
+    }
 
     onDelete() {
         this.setState(this.state.merge({
             isLoading: true,
             error: null
         }));
-    },
+    }
 
     onDeleteComplete(entries) {
         this.setState(this.state.withMutations((state) => {
@@ -58,7 +56,7 @@ export default composeClass({
                         return entries.indexOf(item) < 0;
                     }));
         }));
-    },
+    }
 
     onDeleteFail(reason) {
         this.setState(this.state.withMutations((state) => {
@@ -66,7 +64,7 @@ export default composeClass({
                 .set('isLoading', false)
                 .set('error', reason);
         }));
-    },
+    }
 
     onFind(query) {
         this.setState(this.state.merge({
@@ -74,7 +72,7 @@ export default composeClass({
             error: null,
             data: QueryResult(query, List())
         }));
-    },
+    }
 
     onFindComplete(entries) {
         this.setState(this.state.withMutations((state) => {
@@ -83,7 +81,7 @@ export default composeClass({
                 .set('error', null)
                 .setIn(PATH_QUERY_RESULT, entries);
         }));
-    },
+    }
 
     onFindFail(err) {
         this.setState(this.state.withMutations((state) => {
@@ -92,4 +90,4 @@ export default composeClass({
                 .set('error', err);
         }));
     }
-});
+}

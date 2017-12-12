@@ -1,4 +1,3 @@
-import composeClass from 'compose-class';
 import Symbol from 'es6-symbol';
 import get from 'lodash/get';
 import defaults from 'lodash/defaults';
@@ -15,40 +14,41 @@ const FIELDS = {
     options: Symbol('options')
 };
 
-const Logger = composeClass({
+export default class Logger {
     constructor(log = DEFAULT_LOG, options = {}) {
         this[FIELDS.log] = log;
         this[FIELDS.options] = defaults(options, DEFAULT_OPTIONS);
-    },
+    }
+
     log(...args) {
         const prefix = get(this[FIELDS.options], 'prefix', DEFAULT_PREFIX);
         const log = this[FIELDS.log];
         log.log(prefix, ...args);
-    },
+    }
 
     warn(...args) {
         const prefix = get(this[FIELDS.options], 'prefix', DEFAULT_PREFIX);
         const log = this[FIELDS.log];
         log.warn(prefix, ...args);
-    },
+    }
 
     info(...args) {
         const prefix = get(this[FIELDS.options], 'prefix', DEFAULT_PREFIX);
         const log = this[FIELDS.log];
         log.info(prefix, ...args);
-    },
+    }
 
     error(...args) {
         const prefix = get(this[FIELDS.options], 'prefix', DEFAULT_PREFIX);
         const log = this[FIELDS.log];
         log.error(prefix, ...args);
-    },
+    }
 
     success(...args) {
         const prefix = get(this[FIELDS.options], 'prefix', DEFAULT_PREFIX);
         const log = this[FIELDS.log];
         log.log(prefix, ...args);
-    },
+    }
 
     debug(...args) {
         const options = this[FIELDS.options];
@@ -59,8 +59,4 @@ const Logger = composeClass({
             log.log(prefix, '[DEBUG]', ...args);
         }
     }
-});
-
-export default function create(...args) {
-    return new Logger(...args);
 }

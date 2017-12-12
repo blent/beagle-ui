@@ -16,10 +16,8 @@
     "alt-mixins": "1.0.0",
     "alt-react": "0.0.1",
     "alt-utils": "^2.0.0",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "bluebird": "^3.5.0",
+    "axios": "^0.17.1",
     "classnames": "2.2.5",
-    "compose-class": "^1.0.2",
     "create-react-class": "^15.6.2",
     "css-mqpacker": "^6.0.1",
     "date-fns": "^1.28.5",
@@ -45,7 +43,6 @@
     "react-tap-event-plugin": "^2.0.1",
     "recharts": "^1.0.0-alpha.2",
     "roboto-fontface": "^0.8.0",
-    "superagent": "^3.5.2",
     "url-join": "^2.0.2",
     "uuid": "^3.1.0"
   },
@@ -55,6 +52,7 @@
     "babel-eslint": "^8.0.3",
     "babel-jest": "^21.2.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-plugin-import": "^1.6.2",
     "babel-preset-react-app": "^3.1.0",
     "babel-runtime": "^6.26.0",
@@ -102,8 +100,9 @@
     "whatwg-fetch": "^2.0.3"
   },
   "proxy": {
-    "/api": {
-      "target": "http://localhost:8080"
+    "/api/*": {
+      "target": "http://localhost:8080",
+      "secure": false
     }
   },
   "jest": {

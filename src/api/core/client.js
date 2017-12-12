@@ -1,107 +1,91 @@
-import composeClass from 'compose-class';
-import superagent from 'superagent';
-import Promise from 'bluebird';
 import Symbol from 'es6-symbol';
-import isEmpty from 'lodash/isEmpty';
+import join from 'url-join';
+import axios from 'axios';
+import keys from 'lodash/keys';
+import map from 'lodash/map';
 import forEach from 'lodash/forEach';
-import uuid from 'uuid';
-import EventEmitter from 'eventemitter3';
-import ObservableMixin from 'observable-mixin';
-import urlJoin from 'url-join';
-import HttpEvents from './events';
+import ApiResult from './result';
+import ApiError from './error';
 
 const FIELDS = {
-    emitter: Symbol('emitter'),
-    baseEndpoint: Symbol('baseEndpoint')
+    baseUrl: Symbol('baseUrl'),
 };
 
-/**
- * Represents low-lever http service for communication with external services via AJAX.
- * @class
- */
-const HttpClient = composeClass({
-    mixins: [
-        ObservableMixin(FIELDS.emitter)
-    ],
+function queryParams(params) {
+    if (params == null) {
+        return '';
+    }
 
-    /**
-     * Creates new instance of HttpClient.
-     * @constructor
-     */
-    constructor(baseEndpoint = '') {
-        this[FIELDS.emitter] = new EventEmitter();
-        this[FIELDS.baseEndpoint] = baseEndpoint;
-    },
+    return `?${map(keys(params), k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
+        .join('&')}`;
+}
 
-    /**
-     * Executes AJAX request.
-     * @param {any} options - Request options. Required.
-     * @param {string} options.url - Target url. Required.
-     * @param {string} options.method - Http method type. (GET, POST, PUT, DELETE) Required.
-     * @param {object} options.params - Query parameters. Optional.
-     * @param {object} options.data - Data to send for POST/PUT requests.
-     * @param {object} options.headers - Request headers. Optional.
-     * @returns {Promise}
-     */
-    execute(options = {}) {
-        return Promise.fromCallback((done) => {
-            const methodType = (options.method === 'DELETE' ? 'DEL' : (options.method || '')).toLowerCase();
-            const method = superagent[methodType];
+async function request(client, method, path, options = {}, payload = null) {
+    let url = join(
+        client[FIELDS.baseUrl],
+        path,
+        queryParams(options.query),
+    );
 
-            if (!method) {
-                done(new Error(`Unsupported http method: ${options.method}`));
-                return;
-            }
+    if (url[url.length - 1] === '/') {
+        url = url.substring(0, url.length - 1);
+    }
+    const req = {
+        url,
+        method,
+        headers: {
+            Accept: 'application/json; charset=utf-8',
+        },
+    };
 
-            if (isEmpty(options.url)) {
-                done(new Error('Empty url'));
-                return;
-            }
-
-            const request = method.call(superagent, urlJoin(
-                this[FIELDS.baseEndpoint],
-                options.url
-            ));
-
-            if (options.headers) {
-                forEach(options.headers, (value, key) => request.set(key, value));
-            }
-
-            if (!options.headers || !options.headers.Accept) {
-                request.set('Accept', 'application/json; charset=utf-8');
-            }
-
-            if (!options.headers || !options.headers['Content-Type']) {
-                request.set('Content-Type', 'application/json; charset=utf-8');
-            }
-
-            if (options.params) {
-                request.query(options.params);
-            }
-
-            if ((methodType === 'post' || methodType === 'put' || methodType === 'del') && options.data) {
-                request.send(options.data);
-            }
-
-            const id = uuid.v4();
-            this[FIELDS.emitter].emit(HttpEvents.START, { id });
-
-            request.end((error, response) => {
-                this[FIELDS.emitter].emit(HttpEvents.STOP, { id });
-
-                if (!error) {
-                    this[FIELDS.emitter].emit(HttpEvents.SUCCESS, { id });
-                    return done(null, response);
-                }
-
-                this[FIELDS.emitter].emit(HttpEvents.ERROR, { id, error });
-
-                return done(error);
-            });
+    if (options.headers != null) {
+        forEach(options.headers, (value, key) => {
+            req.headers[key] = value;
         });
     }
-});
 
-export default function create(...args) {
-    return new HttpClient(...args);
+    if ((method === 'POST' || method === 'PUT' || method === 'DELETE') && payload != null) {
+        req.data = payload;
+    }
+
+    let resp;
+    let err;
+
+    try {
+        resp = await axios(req);
+    } catch (e) {
+        err = e;
+    }
+
+    if (err != null) {
+        if (resp != null) {
+            return new ApiResult(new ApiError(err, resp.headers));
+        }
+
+        return new ApiResult(new ApiError(err));
+    }
+
+    return new ApiResult(null, resp.headers, resp.data);
+}
+
+export default class HttpClient {
+    constructor(options) {
+        this[FIELDS.baseUrl] = options.baseUrl || '/';
+    }
+
+    async get(path, options) {
+        return request(this, 'GET', path, options);
+    }
+
+    async put(path, data, options) {
+        return request(this, 'PUT', path, options, data);
+    }
+
+    async post(path, data, options) {
+        return request(this, 'POST', path, options, data);
+    }
+
+    async del(path, data, options) {
+        return request(this, 'DELETE', path, options, data);
+    }
 }

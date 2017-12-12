@@ -1,47 +1,43 @@
-import composeClass from 'compose-class';
 import Symbol from 'es6-symbol';
-import Promise from 'bluebird';
 import Credentials from '../models/auth/credentials';
+import Result from './core/result';
 
 const FIELDS = {
-    http: Symbol('http'),
+    client: Symbol('client'),
     credentials: Symbol('credentials')
 };
 
-const AuthenticationService = composeClass({
-    constructor(params = {}) {
-        this[FIELDS.http] = params.http;
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export default class AuthApi {
+    constructor(client) {
+        this[FIELDS.client] = client;
         this[FIELDS.credentials] = Credentials();
-    },
+    }
 
     getCredentials() {
         return this[FIELDS.credentials];
-    },
-
-    login(username) {
-        return Promise.fromCallback((done) => {
-            setTimeout(() => {
-                this[FIELDS.credentials] = this[FIELDS.credentials].merge({
-                    username,
-                    authenticated: true
-                });
-
-                done(null, this[FIELDS.credentials]);
-            }, 1000);
-        });
-    },
-
-    logout() {
-        return Promise.fromCallback((done) => {
-            setTimeout(() => {
-                this[FIELDS.credentials] = this[FIELDS.credentials].set('authenticated', false);
-
-                done(null, this[FIELDS.credentials]);
-            }, 1000);
-        });
     }
-});
 
-export default function create(...args) {
-    return new AuthenticationService(...args);
+    async login(username) {
+        // mocking
+        await timeout(1000);
+
+        this[FIELDS.credentials] = this[FIELDS.credentials].merge({
+            username,
+            authenticated: true
+        });
+
+        return new Result(null, {}, this[FIELDS.credentials]);
+    }
+
+    async logout() {
+        await timeout(1000);
+
+        this[FIELDS.credentials] = this[FIELDS.credentials].set('authenticated', false);
+
+        return new Result(null, {}, this[FIELDS.credentials]);
+    }
 }

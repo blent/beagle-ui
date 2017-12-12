@@ -1,11 +1,10 @@
-import composeClass from 'compose-class';
 import urlJoin from 'url-join';
 import DataSource from '../models/data-source';
 import { requires } from '../utils/contracts';
 
 const PATH_ITEM_ID = ['data', 'id'];
 
-export default composeClass({
+export default class GenericItemStore {
     constructor(actions, router, cancelRoute) {
         requires('actions', actions);
         requires('router', router);
@@ -19,7 +18,7 @@ export default composeClass({
             error: null,
             data: null
         });
-    },
+    }
 
     isNew() {
         const id = this.state.getIn(PATH_ITEM_ID);
@@ -29,7 +28,7 @@ export default composeClass({
         }
 
         return !(id > 0);
-    },
+    }
 
     onCreate() {
         this.setState(this.state.withMutations((state) => {
@@ -38,7 +37,7 @@ export default composeClass({
                 .set('error', null)
                 .set('data', null);
         }));
-    },
+    }
 
     onCancel() {
         this.setState(this.state.withMutations((state) => {
@@ -50,7 +49,7 @@ export default composeClass({
         setTimeout(() => {
             this.router.redirect(this.cancelRoute);
         });
-    },
+    }
 
     onGet() {
         this.setState(this.state.withMutations((state) => {
@@ -59,7 +58,7 @@ export default composeClass({
                 .set('error', null)
                 .set('data', null);
         }));
-    },
+    }
 
     onGetComplete(model) {
         this.setState(this.state.withMutations((state) => {
@@ -68,7 +67,7 @@ export default composeClass({
                 .set('error', null)
                 .set('data', model);
         }));
-    },
+    }
 
     onGetFail(err) {
         this.setState(this.state.withMutations((state) => {
@@ -76,14 +75,14 @@ export default composeClass({
                 .set('isLoading', false)
                 .set('error', err);
         }));
-    },
+    }
 
     onSave() {
         this.setState(this.state.withMutations((state) => {
             return state
                 .set('isLoading', true);
         }));
-    },
+    }
 
     onSaveComplete(model) {
         const isNew = this.isNew();
@@ -103,7 +102,7 @@ export default composeClass({
                 ));
             });
         }
-    },
+    }
 
     onSaveFail(err) {
         this.setState(this.state.withMutations((state) => {
@@ -111,18 +110,18 @@ export default composeClass({
                 .set('isLoading', false)
                 .set('error', err);
         }));
-    },
+    }
 
     onDelete() {
         this.setState(this.state.withMutations((state) => {
             return state
                 .set('isLoading', true);
         }));
-    },
+    }
 
     onDeleteComplete() {
         this.onCancel();
-    },
+    }
 
     onDeleteFail(err) {
         this.setState(this.state.withMutations((state) => {
@@ -131,4 +130,4 @@ export default composeClass({
                 .set('error', err);
         }));
     }
-});
+}

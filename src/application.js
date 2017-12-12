@@ -8,8 +8,8 @@ import {
     Container
 } from './container';
 import Router from './router';
-import AuthActions from './actions/authentication';
-import AuthStore from './stores/authentication';
+import AuthActions from './actions/auth';
+import AuthStore from './stores/auth';
 import NotificationsActions from './actions/notifications';
 import NotificationsStore from './stores/notifications';
 import GenericListActions from './actions/generic-list';
@@ -35,12 +35,12 @@ class Application extends Alt {
     constructor(params) {
         super({});
 
-        this[FIELDS.container] = Container(params);
+        this[FIELDS.container] = new Container(params);
         this[FIELDS.container].register(namespaces.ui()).factory('router', [
             'logger',
             'settings'
         ], (createLogger, settings) => {
-            return Router({
+            return new Router({
                 logger: createLogger('router'),
                 engine: settings.get('history').toJS()
             });

@@ -1,19 +1,14 @@
-/* eslint-disable lodash/prefer-constant  */
-import composeClass from 'compose-class';
 import { requires } from '../utils/contracts';
-import {
-    onAsyncComplete,
-    onAsyncFail
-} from './helpers/action-async-handlers';
+import proxy from './helpers/async-proxy';
 
-export default composeClass({
-    constructor(name, service, notifications) {
+class GenericListActions {
+    constructor(name, api, notifications) {
         requires('name', name);
-        requires('service', service);
+        requires('api', api);
         requires('notifications', notifications);
 
         this.name = name;
-        this.service = service;
+        this.api = api;
         this.notifications = notifications;
 
         this.generateActions(
@@ -24,21 +19,15 @@ export default composeClass({
             'findComplete',
             'findFail'
         );
-    },
-
-    find(query = null) {
-        this.service.find(query)
-            .then(onAsyncComplete(this, 'find'))
-            .catch(onAsyncFail(this, 'find'));
-
-        return query;
-    },
-
-    delete(entries) {
-        this.service.deleteMany(entries)
-            .then(() => this.deleteComplete(entries))
-            .catch(onAsyncFail(this, 'delete'));
-
-        return entries;
     }
-});
+
+    async find(query = null) {
+        return this.api.find(query);
+    }
+
+    async delete(entries) {
+        return this.api.deleteMany(entries);
+    }
+}
+
+export default proxy(GenericListActions);

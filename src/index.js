@@ -13,9 +13,9 @@ import './index.css';
 
 const history = browserHistory;
 const app = App({
-    debug: get(process, 'env.NODE_ENV', 'development') === 'development',
+    debug: get(process.env, 'NODE_ENV', 'development') === 'development',
     http: {
-        api: get(process, 'env.BEAGLE_API_URL', 'http://localhost:8080/api')
+        baseUrl: get(process.env, 'BEAGLE_API_URL', '/api')
     },
     logger: console,
     history

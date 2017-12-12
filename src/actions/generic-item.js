@@ -1,19 +1,14 @@
-/* eslint-disable lodash/prefer-constant  */
-import composeClass from 'compose-class';
 import { requires } from '../utils/contracts';
-import {
-    onAsyncComplete,
-    onAsyncFail
-} from './helpers/action-async-handlers';
+import proxy from './helpers/async-proxy';
 
-export default composeClass({
-    constructor(name, service, notifications) {
+class GenericItemActions {
+    constructor(name, api, notifications) {
         requires('name', name);
-        requires('service', service);
+        requires('api', api);
         requires('notifications', notifications);
 
         this.name = name;
-        this.service = service;
+        this.api = api;
         this.notifications = notifications;
 
         this.generateActions(
@@ -26,29 +21,19 @@ export default composeClass({
             'deleteComplete',
             'deleteFail'
         );
-    },
-
-    get(id) {
-        this.service.get(id)
-            .then(onAsyncComplete(this, 'get'))
-            .catch(onAsyncFail(this, 'get'));
-
-        return null;
-    },
-
-    save(model) {
-        this.service.save(model)
-            .then(onAsyncComplete(this, 'save'))
-            .catch(onAsyncFail(this, 'save'));
-
-        return null;
-    },
-
-    delete(model) {
-        this.service.delete(model)
-            .then(onAsyncComplete(this, 'delete'))
-            .catch(onAsyncFail(this, 'delete'));
-
-        return null;
     }
-});
+
+    async get(id) {
+        return this.api.get(id);
+    }
+
+    async save(model) {
+        return this.api.save(model);
+    }
+
+    async delete(model) {
+        return this.api.delete(model);
+    }
+}
+
+export default proxy(GenericItemActions);

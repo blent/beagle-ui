@@ -1,4 +1,3 @@
-import composeClass from 'compose-class';
 import Symbol from 'es6-symbol';
 import { requires } from './utils/contracts';
 
@@ -7,7 +6,7 @@ const FIELDS = {
     engine: Symbol('engine')
 };
 
-const Router = composeClass({
+export default class Router {
     constructor(params) {
         requires('params', params);
         requires('params.logger', params.logger);
@@ -15,11 +14,11 @@ const Router = composeClass({
 
         this[FIELDS.logger] = params.logger;
         this[FIELDS.engine] = params.engine;
-    },
+    }
 
     getLocation() {
         return this[FIELDS.engine].getCurrentLocation();
-    },
+    }
 
     navigate(path) {
         requires('path', path);
@@ -27,7 +26,7 @@ const Router = composeClass({
         this[FIELDS.engine].push(path);
 
         return this;
-    },
+    }
 
     redirect(path) {
         requires('path', path);
@@ -35,15 +34,11 @@ const Router = composeClass({
         this[FIELDS.engine].replace(path);
 
         return this;
-    },
+    }
 
     subscribe(handler) {
         requires('handler', handler);
 
         return this[FIELDS.engine].listen(handler);
     }
-});
-
-export default function create(params) {
-    return new Router(params);
 }

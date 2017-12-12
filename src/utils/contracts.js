@@ -1,4 +1,3 @@
-import isNil from 'lodash/isNil';
 
 /**
   * Checks for a condition; if the condition is false,
@@ -19,5 +18,7 @@ export function assert(message, condition) {
   * @param {any} value - The conditional expression to test.
   */
 export function requires(name, value) {
-    assert(`${name} is required!`, !isNil(value));
+    if (value == null) {
+        throw new ReferenceError(`${name} is required!`);
+    }
 }
