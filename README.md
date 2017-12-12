@@ -19,5 +19,6 @@ sudo beagle --http-static-dir /PATH_TO_BEAGLE_UI/build
 ### Development
 
 ```sh
+sudo ./bin/beagle
 yarn install && yarn start
 ```
